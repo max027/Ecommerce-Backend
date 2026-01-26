@@ -46,9 +46,9 @@ public class PaymentTransactions {
 
     private String status;
 
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(columnDefinition = "jsonb")
-    private JsonNode gatewayResponse;
+//    @JdbcTypeCode(SqlTypes.JSON)
+//    @Column(columnDefinition = "jsonb")
+//    private JsonNode gatewayResponse;
 
     @CreatedDate
     @Column(name = "created_at")

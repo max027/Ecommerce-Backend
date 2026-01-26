@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<Users,Long> {
@@ -18,4 +19,6 @@ public interface UserRepository extends JpaRepository<Users,Long> {
     where u.userId=:userId
     """)
     void updateLastLogin(@Param("userId") long userId, @Param("time") Instant time);
+
+    Optional<Users> findByEmail(String email);
 }

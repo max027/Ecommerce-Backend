@@ -40,7 +40,6 @@ public class OrderItems {
     @Column(name = "product_sku",nullable = false)
     private String productSku;
 
-    @Column(columnDefinition = "INT NOT NULL CHECK quantity>0")
     private int quantity;
 
     @Column(name = "unit_price", nullable = false)

@@ -32,7 +32,6 @@ public class Cart extends Auditable{
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Products products;
 
-    @Column(columnDefinition = "DECIMAL(10,2) CHECK quantity>0")
     private int quantity=1;
 
     private double price;

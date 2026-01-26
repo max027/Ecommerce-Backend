@@ -54,9 +54,9 @@ public class Payments extends Auditable{
     private StatusEnum status=StatusEnum.PENDING;
 
 
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(columnDefinition = "jsonb")
-    private JsonNode gatewayResponse;
+//    @JdbcTypeCode(SqlTypes.JSON)
+//    @Column(columnDefinition = "jsonb")
+//    private JsonNode gatewayResponse;
 
     @Column(name = "failure_test")
     private String failureTest;
