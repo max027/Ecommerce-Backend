@@ -5,7 +5,10 @@ import com.saurabh.E_Commerce.dto.LoginResponse;
 import com.saurabh.E_Commerce.dto.RegisterRequest;
 import com.saurabh.E_Commerce.dto.RegisterResponse;
 import com.saurabh.E_Commerce.exception.ApiError;
+import com.saurabh.E_Commerce.models.Roles;
 import com.saurabh.E_Commerce.models.Users;
+import com.saurabh.E_Commerce.models.enums.RolesEnum;
+import com.saurabh.E_Commerce.repository.RolesRepository;
 import com.saurabh.E_Commerce.repository.UserRepository;
 import com.saurabh.E_Commerce.security.AuthUtils;
 import lombok.RequiredArgsConstructor;
@@ -16,10 +19,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
     private final UserRepository userRepository;
+    private final RolesRepository rolesRepository;
     private final PasswordEncoder encoder;
     private final AuthenticationManager authenticationManager;
     private final AuthUtils authUtils;
@@ -36,6 +42,11 @@ public class AuthService {
         users.setPhone(request.getPhone());
         users.setPassword(encoder.encode(request.getPassword()));
 
+        Roles userRoles=rolesRepository.findRolesByName(RolesEnum.CUSTOMER).orElseThrow(
+                ()->new ApiError("Default role not found",HttpStatus.NOT_FOUND.value())
+        );
+
+        users.setRoles(Set.of(userRoles));
         userRepository.save(users);
 
         return new RegisterResponse(

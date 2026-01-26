@@ -15,7 +15,7 @@ public enum PermissionEnum {
     //ORDERS
     VIEW_ORDERS,
     MANAGE_ORDERS,
-    CANCEL_ORDER,
+    CANCEL_ORDERS,
 
     //payment
     VIEW_PAYMENTS,
@@ -35,5 +35,6 @@ public enum PermissionEnum {
     //roles
     MANAGE_ROLES,
     ASSIGN_PERMISSIONS,
+
 
 }
