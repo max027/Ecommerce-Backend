@@ -25,7 +25,6 @@ public class InventoryTransaction extends Auditable{
 
     @ManyToOne
     @JoinColumn(name = "product_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Products products;
 
     @Enumerated(EnumType.STRING)

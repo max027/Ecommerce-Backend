@@ -26,7 +26,6 @@ public class Shipments extends Auditable {
 
     @ManyToOne
     @JoinColumn(name = "order_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Orders orders;
 
     @Column(name = "tracking_number")

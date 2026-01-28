@@ -35,17 +35,14 @@ public class Review {
 
     @ManyToOne
     @JoinColumn(name = "product_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Products products;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Users users;
 
     @ManyToOne
     @JoinColumn(name = "order_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Orders orders;
 
     @Min(1)

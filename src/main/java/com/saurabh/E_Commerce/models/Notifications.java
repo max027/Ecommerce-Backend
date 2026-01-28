@@ -25,7 +25,6 @@ public class Notifications {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Users users;
 
     @Enumerated(EnumType.STRING)

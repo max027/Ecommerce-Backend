@@ -11,7 +11,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.Instant;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -51,6 +53,9 @@ public class Users extends Auditable implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private Set<Roles> roles;
+
+    @OneToMany(cascade = CascadeType.REMOVE,orphanRemoval = true,fetch = FetchType.LAZY,mappedBy = "users")
+    private Set<Address> addresses;
 
 
     @Override

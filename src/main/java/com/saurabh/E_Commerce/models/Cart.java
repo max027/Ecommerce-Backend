@@ -29,7 +29,6 @@ public class Cart extends Auditable{
 
     @ManyToOne
     @JoinColumn(name = "product_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Products products;
 
     private int quantity=1;

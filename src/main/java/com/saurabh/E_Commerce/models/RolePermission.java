@@ -23,12 +23,10 @@ public class RolePermission {
     @ManyToOne
     @MapsId("roleId")
     @JoinColumn(name = "role_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Roles roles;
 
     @ManyToOne
     @MapsId("permissionId")
     @JoinColumn(name = "permission_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Permissions permissions;
 }

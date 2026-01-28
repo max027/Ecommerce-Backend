@@ -9,6 +9,8 @@ import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.util.List;
+
 @Entity
 @Table(name = "orders")
 @Getter
@@ -26,7 +28,6 @@ public class Orders extends Auditable{
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Users users;
 
     @Enumerated(EnumType.STRING)
@@ -52,13 +53,11 @@ public class Orders extends Auditable{
 
     @ManyToOne
     @JoinColumn(name = "shipping_address")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Address shippingAddress;
 
 
     @ManyToOne
     @JoinColumn(name = "billing_address")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Address billingAddress;
 
     @Column(name = "customer_email")
@@ -66,6 +65,9 @@ public class Orders extends Auditable{
 
     @Column(name = "customer_phone")
     private String customerPhone;
+
+   @OneToMany(cascade ={CascadeType.REMOVE,CascadeType.PERSIST,CascadeType.MERGE},mappedBy = "orders")
+   private List<OrderItems> orderItems;
 
 
 }

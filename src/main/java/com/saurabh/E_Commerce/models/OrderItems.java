@@ -26,12 +26,10 @@ public class OrderItems {
 
     @ManyToOne
     @JoinColumn(name = "orders_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Orders orders;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Products products;
 
     @Column(name = "product_name",nullable = false)

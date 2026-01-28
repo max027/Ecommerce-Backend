@@ -31,6 +31,5 @@ public class Categories extends Auditable{
 
     @ManyToOne
     @JoinColumn(name = "category_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Categories parentId;
 }

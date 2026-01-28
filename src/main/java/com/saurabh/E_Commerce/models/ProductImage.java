@@ -22,7 +22,6 @@ public class ProductImage extends Auditable{
 
     @ManyToOne
     @JoinColumn(name = "product_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Products products;
 
     @Column(name = "image_url",nullable = false)

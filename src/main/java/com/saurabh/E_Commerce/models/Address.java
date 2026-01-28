@@ -22,7 +22,6 @@ public class Address extends Auditable {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Users users;
 
     @Column(name = "address_type")

@@ -17,13 +17,11 @@ public class UserRoles {
     @ManyToOne
     @MapsId("roleId")
     @JoinColumn(name = "role_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Roles roles;
 
     @ManyToOne
     @MapsId("userId")
     @JoinColumn(name = "user_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Users users;
 
     @Column(name = "assigned_at")

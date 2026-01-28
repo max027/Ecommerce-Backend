@@ -30,7 +30,6 @@ public class PaymentTransactions {
 
     @ManyToOne
     @JoinColumn(name = "payment_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Payments payments;
 
     @Enumerated

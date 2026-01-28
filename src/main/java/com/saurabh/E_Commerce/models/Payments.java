@@ -30,7 +30,6 @@ public class Payments extends Auditable{
 
     @ManyToOne
     @JoinColumn(name = "orders_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Orders orders;
 
     @Column(name = "payment_gateway",nullable = false)

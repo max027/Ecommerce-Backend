@@ -26,7 +26,6 @@ public class OrderStatusHistory {
 
     @ManyToOne
     @JoinColumn(name = "orders_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Orders orders;
 
     private String status;

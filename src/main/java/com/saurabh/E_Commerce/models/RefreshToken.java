@@ -24,7 +24,6 @@ public class RefreshToken extends Auditable{
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Users users;
 
     private String token;

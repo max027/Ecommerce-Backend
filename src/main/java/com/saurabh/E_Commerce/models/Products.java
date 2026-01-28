@@ -33,7 +33,6 @@ public class Products extends Auditable{
 
     @ManyToOne
     @JoinColumn(name = "category_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Categories categories;
 
     private double price;
@@ -47,6 +46,6 @@ public class Products extends Auditable{
     @Column(name = "is_active")
     private boolean isActive=true;
 
-    @OneToMany(mappedBy = "products")
+    @OneToMany(mappedBy = "products",fetch = FetchType.EAGER,cascade = {CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REMOVE})
     private List<ProductImage> images;
 }
