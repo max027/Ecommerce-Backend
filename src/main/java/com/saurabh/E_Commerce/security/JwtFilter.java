@@ -5,6 +5,7 @@ import com.saurabh.E_Commerce.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -27,12 +28,20 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String headers=response.getHeader("Authorization");
-        if (headers==null || !headers.startsWith("Bearer")){
-            filterChain.doFilter(request,response);
-            return;
+        String token=null;
+        if (request.getCookies()!=null){
+            for (Cookie cookie: request.getCookies()){
+                if ("accessToken".equals(cookie.getName())){
+                    token=cookie.getValue();
+                }
+            }
+
         }
-        String token=headers.split("Bearer ")[1];
+        if (token==null || !authUtils.isTokenValid(token)){
+           filterChain.doFilter(request,response);
+           return;
+        }
+
         String username=authUtils.getUsername(token);
 
         List<String>authorities=authUtils.getAuthorities(token);

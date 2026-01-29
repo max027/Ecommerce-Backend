@@ -1,10 +1,8 @@
 package com.saurabh.E_Commerce.service;
 
-import com.saurabh.E_Commerce.dto.LoginRequest;
-import com.saurabh.E_Commerce.dto.LoginResponse;
-import com.saurabh.E_Commerce.dto.RegisterRequest;
-import com.saurabh.E_Commerce.dto.RegisterResponse;
+import com.saurabh.E_Commerce.dto.*;
 import com.saurabh.E_Commerce.exception.ApiError;
+import com.saurabh.E_Commerce.models.RefreshToken;
 import com.saurabh.E_Commerce.models.Roles;
 import com.saurabh.E_Commerce.models.Users;
 import com.saurabh.E_Commerce.models.enums.RolesEnum;
@@ -13,11 +11,13 @@ import com.saurabh.E_Commerce.repository.UserRepository;
 import com.saurabh.E_Commerce.security.AuthUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 
@@ -29,7 +29,9 @@ public class AuthService {
     private final PasswordEncoder encoder;
     private final AuthenticationManager authenticationManager;
     private final AuthUtils authUtils;
+    private final RefreshTokenService refreshTokenService;
 
+    @Transactional
     public RegisterResponse signup(RegisterRequest request){
         Users users=userRepository.findByEmail(request.getEmail()).orElse(null);
         if (users!=null){
@@ -55,7 +57,7 @@ public class AuthService {
         );
     }
 
-    public LoginResponse login(LoginRequest request) {
+    public LoginTokens login(LoginRequest request) {
         Authentication authUser=authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
@@ -63,14 +65,34 @@ public class AuthService {
                 )
         );
         Users users=(Users) authUser.getPrincipal();
-        LoginResponse response=new LoginResponse();
 
         String token= authUtils.generateToken(users);
+        RefreshToken refreshToken=refreshTokenService.generateToken(users);
 
-        response.setId(users.getUserId());
-        response.setJwt(token);
-        response.setEmail(users.getEmail());
+        LoginTokens tokens=new LoginTokens();
+        tokens.setAccessToken(token);
+        tokens.setRefreshToken(refreshToken.getToken());
 
-        return response;
+        return tokens;
+    }
+    public LoginTokens refresh(String refreshToken){
+        RefreshToken token=refreshTokenService.verify(refreshToken);
+        refreshTokenService.revoke(token);
+
+        Users users=token.getUsers();
+
+        String newAccessToken= authUtils.generateToken(users);
+        RefreshToken newRefreshToken=refreshTokenService.generateToken(users);
+
+        LoginTokens tokens=new LoginTokens();
+        tokens.setAccessToken(newAccessToken);
+        tokens.setRefreshToken(newRefreshToken.getToken());
+
+        return tokens;
+
+    }
+    public void logout(String token){
+        RefreshToken refreshToken=refreshTokenService.verify(token);
+        refreshTokenService.logout(refreshToken);
     }
 }

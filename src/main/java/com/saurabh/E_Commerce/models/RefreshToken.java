@@ -2,10 +2,7 @@ package com.saurabh.E_Commerce.models;
 
 import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -26,6 +23,7 @@ public class RefreshToken extends Auditable{
     @JoinColumn(name = "user_id")
     private Users users;
 
+    @Column(name = "token",unique = true)
     private String token;
 
     @Column(name = "expires_at")
