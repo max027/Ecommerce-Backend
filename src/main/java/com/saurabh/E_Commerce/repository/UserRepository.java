@@ -21,4 +21,5 @@ public interface UserRepository extends JpaRepository<Users,Long> {
     void updateLastLogin(@Param("userId") long userId, @Param("time") Instant time);
 
     Optional<Users> findByEmail(String email);
+    boolean existsByEmail(String email);
 }

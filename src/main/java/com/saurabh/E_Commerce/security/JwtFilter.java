@@ -1,5 +1,6 @@
 package com.saurabh.E_Commerce.security;
 
+import com.saurabh.E_Commerce.exception.ApiError;
 import com.saurabh.E_Commerce.models.Users;
 import com.saurabh.E_Commerce.repository.UserRepository;
 import io.jsonwebtoken.Claims;
@@ -9,6 +10,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -49,7 +51,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
 
         if (username!=null && SecurityContextHolder.getContext().getAuthentication()==null){
-            Users users=userRepository.findByEmail(username).orElseThrow();
+            Users users=userRepository.findByEmail(username).orElseThrow(()->new ApiError("User not found", HttpStatus.NOT_FOUND.value()));
             UsernamePasswordAuthenticationToken token1=
                     new UsernamePasswordAuthenticationToken(
                             users,null,grantedAuthorities

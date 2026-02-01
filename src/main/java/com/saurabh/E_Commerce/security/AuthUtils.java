@@ -1,12 +1,16 @@
 package com.saurabh.E_Commerce.security;
 
+import com.saurabh.E_Commerce.exception.ApiError;
 import com.saurabh.E_Commerce.models.Users;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -32,8 +36,8 @@ public class AuthUtils {
    public boolean isTokenValid(String token){
       try{
          Claims claims=extractClaims(token);
-         Instant time=claims.getExpiration().toInstant();
-         if (time.isBefore(Instant.now())){
+         Instant expirationTime=claims.getExpiration().toInstant();
+         if (expirationTime.isBefore(Instant.now())){
             return false;
          }
          return true;
@@ -49,6 +53,7 @@ public class AuthUtils {
         return Jwts.builder()
                 .signWith(getSecretKey())
                 .subject(users.getUsername())
+                .claim("id",users.getUserId())
                 .claims(map)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis()+expiration))
@@ -67,5 +72,14 @@ public class AuthUtils {
    public List<String> getAuthorities(String token){
       Claims claims=extractClaims(token);
       return (List<String>)claims.get("authorities");
+   }
+
+   public Users getCurrentUser(){
+      Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+      if (authentication==null){
+         throw new ApiError("user not authenticated", HttpStatus.UNAUTHORIZED.value());
+      }
+      return (Users) authentication.getPrincipal();
+
    }
 }

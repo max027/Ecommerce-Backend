@@ -130,4 +130,11 @@ public class AuthController {
 
         return buildResponse(accessCookie,refreshCookie);
     }
+
+    @PostMapping("/forget-password")
+    public ResponseEntity<?> forgetPassword(@RequestBody Map<String,String>newPassword ){
+        service.forgetPassword(newPassword);
+        return ResponseEntity.ok("Password Changed");
+    }
+
 }

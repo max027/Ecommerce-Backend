@@ -19,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
 import java.util.Set;
 
 @Service
@@ -45,7 +46,7 @@ public class AuthService {
         users.setPassword(encoder.encode(request.getPassword()));
 
         Roles userRoles=rolesRepository.findRolesByName(RolesEnum.CUSTOMER).orElseThrow(
-                ()->new ApiError("Default role not found",HttpStatus.NOT_FOUND.value())
+                ()->new ApiError("Default role for user not found",HttpStatus.NOT_FOUND.value())
         );
 
         users.setRoles(Set.of(userRoles));
@@ -95,4 +96,11 @@ public class AuthService {
         RefreshToken refreshToken=refreshTokenService.verify(token);
         refreshTokenService.logout(refreshToken);
     }
+
+    public void forgetPassword(Map<String, String> newPassword) {
+        Users users=authUtils.getCurrentUser();
+
+
+    }
 }
+

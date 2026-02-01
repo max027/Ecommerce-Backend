@@ -1,5 +1,6 @@
 package com.saurabh.E_Commerce.security;
 
+import com.saurabh.E_Commerce.models.enums.RolesEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,6 +42,8 @@ public class SecurityConfig {
                 .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request->{
                     request.requestMatchers("/api/auth/**").permitAll()
+                            .requestMatchers("/api/admin/**").hasRole(RolesEnum.ADMIN.toString())
+                            .requestMatchers("/api/users/**").hasAnyRole(RolesEnum.CUSTOMER.toString(),RolesEnum.ADMIN.toString())
                             .anyRequest().authenticated();
                 })
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

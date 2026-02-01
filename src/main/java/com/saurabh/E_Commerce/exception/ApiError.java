@@ -11,6 +11,7 @@ public class ApiError extends RuntimeException{
     private int statusCode;
     public ApiError(String message,int statusCode){
         super(message);
+        this.message=message;
         this.statusCode=statusCode;
     }
 
