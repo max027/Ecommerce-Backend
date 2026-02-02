@@ -2,16 +2,14 @@ package com.saurabh.E_Commerce.service;
 
 import com.saurabh.E_Commerce.dto.*;
 import com.saurabh.E_Commerce.exception.ApiError;
-import com.saurabh.E_Commerce.models.RefreshToken;
-import com.saurabh.E_Commerce.models.Roles;
-import com.saurabh.E_Commerce.models.Users;
+import com.saurabh.E_Commerce.models.*;
 import com.saurabh.E_Commerce.models.enums.RolesEnum;
+import com.saurabh.E_Commerce.repository.ResetTokenRepository;
 import com.saurabh.E_Commerce.repository.RolesRepository;
 import com.saurabh.E_Commerce.repository.UserRepository;
 import com.saurabh.E_Commerce.security.AuthUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,8 +17,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Map;
+import java.time.Instant;
 import java.util.Set;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +30,9 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final AuthUtils authUtils;
     private final RefreshTokenService refreshTokenService;
+    private final String frontendUrl="http://localhost:8080/api/auth";
+    private final ResetTokenRepository resetTokenRepository;
+    private final EmailService emailService;
 
     @Transactional
     public RegisterResponse signup(RegisterRequest request){
@@ -60,6 +62,7 @@ public class AuthService {
     @Transactional
     public RegisterResponse signAdmin(RegisterRequest request){
         Users users=userRepository.findByEmail(request.getEmail()).orElse(null);
+
         if (users!=null){
             throw new ApiError("User already exist", HttpStatus.CONFLICT.value());
         }
@@ -122,10 +125,40 @@ public class AuthService {
         refreshTokenService.logout(refreshToken);
     }
 
-    public void forgetPassword(Map<String, String> newPassword) {
-        Users users=authUtils.getCurrentUser();
+    public void forgetPassword(String email) {
+        Users users=userRepository.findByEmail(email).orElseThrow(
+                ()->new ApiError("User not found",HttpStatus.NOT_FOUND.value())
+        );
 
+        String token= UUID.randomUUID().toString()+UUID.randomUUID();
+        ResetToken resetToken=new ResetToken();
+        resetToken.setUsers(users);
+        resetToken.setToken(token);
+        resetToken.setExpiresAt(Instant.now().plusSeconds(3000));
 
+        resetTokenRepository.save(resetToken);
+
+        String link=frontendUrl+"/reset-password?token="+token;
+        emailService.send(email,"password reset","Click to reset-password:"+link);
+    }
+    public void resetPassword(ResetPasswordDto resetPasswordDto, String token){
+        ResetToken resetToken=resetTokenRepository.findByToken(token).orElseThrow(
+                ()->new ApiError("no token found",HttpStatus.FORBIDDEN.value())
+        );
+        if (resetToken.isExpired()){
+           throw new ApiError("token expired",HttpStatus.UNAUTHORIZED.value());
+        }
+
+        Users users=resetToken.getUsers();
+
+        if (!encoder.matches(resetPasswordDto.getOldPassword(), users.getPassword())){
+           throw new ApiError("password dont match",HttpStatus.FORBIDDEN.value());
+        }
+
+        users.setPassword(encoder.encode(resetPasswordDto.getNewPassword()));
+        userRepository.save(users);
+
+        resetTokenRepository.delete(resetToken);
     }
 }
 

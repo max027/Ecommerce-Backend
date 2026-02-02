@@ -25,7 +25,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AdminService {
 
-    private final String frontendUrl="http://localhost:8080/";
+    private final String frontendUrl="http://localhost:8080/api";
     private final InviteTokenRepository inviteTokenRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
@@ -63,11 +63,8 @@ public class AdminService {
                 ()->new ApiError("Invalid Token",HttpStatus.FORBIDDEN.value())
         );
 
-        if (inviteToken.isUsed()){
-            throw new ApiError("Invite already exists",HttpStatus.CONFLICT.value());
-        }
-        if (Instant.now().isBefore(inviteToken.getExpiresAt())){
-            throw new ApiError("Invite expires",HttpStatus.FORBIDDEN.value());
+        if (inviteToken.getExpiresAt().isBefore(Instant.now())){
+            throw new ApiError("Invite expires",HttpStatus.UNAUTHORIZED.value());
         }
 
         Users users=new Users();
@@ -77,10 +74,13 @@ public class AdminService {
         Roles roles=rolesRepository.findRolesByName(inviteToken.getRoles()).orElseThrow(
                 ()->new ApiError("Given role not found",HttpStatus.NOT_FOUND.value())
         );
-
         users.setRoles(Set.of(roles));
-        inviteToken.setUsed(true);
-        inviteTokenRepository.save(inviteToken);
+        users.setFirstName(request.getFirstName());
+        users.setLastName(request.getLastName());
+        users.setPhone(request.getPhone());
+
+        userRepository.save(users);
+        inviteTokenRepository.delete(inviteToken);
     }
 
 }

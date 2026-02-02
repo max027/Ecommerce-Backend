@@ -6,7 +6,6 @@ import com.saurabh.E_Commerce.service.AuthService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -14,10 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -46,8 +41,6 @@ public class AuthController {
                 token=cookie.getValue();
             }
         }
-        System.out.println("hello");
-        System.out.println(token);
         if (token==null){
             throw new ApiError("No refreshToken found", HttpStatus.FORBIDDEN.value());
         }
@@ -75,15 +68,17 @@ public class AuthController {
         LoginTokens cookies= service.login(request);
         ResponseCookie accessCookie= ResponseCookie.from("accessToken",cookies.getAccessToken())
                 .httpOnly(true)
-                .secure(true)
                 .maxAge(Duration.ofMinutes(15))
+                .path("/")
+                .secure(false)
                 .sameSite("Lax")
                 .build();
 
         ResponseCookie refreshCookie= ResponseCookie.from("refreshToken",cookies.getRefreshToken())
-                .secure(true)
                 .httpOnly(true)
                 .maxAge(Duration.ofDays(2))
+                .path("/")
+                .secure(false)
                 .sameSite("Lax")
                 .build();
 
@@ -96,15 +91,17 @@ public class AuthController {
 
         ResponseCookie accessCookie= ResponseCookie.from("accessToken",cookies.getAccessToken())
                 .httpOnly(true)
-                .secure(true)
                 .maxAge(Duration.ofMinutes(15))
+                .path("/")
+                .secure(false)
                 .sameSite("Lax")
                 .build();
 
         ResponseCookie refreshCookie= ResponseCookie.from("refreshToken",cookies.getRefreshToken())
-                .secure(true)
                 .httpOnly(true)
                 .maxAge(Duration.ofDays(2))
+                .path("/")
+                .secure(false)
                 .sameSite("Lax")
                 .build();
 
@@ -119,15 +116,17 @@ public class AuthController {
 
         ResponseCookie accessCookie= ResponseCookie.from("accessToken",accessToken)
                 .httpOnly(true)
-                .secure(true)
                 .maxAge(0)
                 .sameSite("Lax")
+                .path("/")
+                .secure(false)
                 .build();
 
         ResponseCookie refreshCookie= ResponseCookie.from("refreshToken",refreshToken)
-                .secure(true)
                 .httpOnly(true)
                 .maxAge(0)
+                .path("/")
+                .secure(false)
                 .sameSite("Lax")
                 .build();
         service.logout(refreshToken);
@@ -136,9 +135,14 @@ public class AuthController {
     }
 
     @PostMapping("/forget-password")
-    public ResponseEntity<?> forgetPassword(@RequestBody Map<String,String>newPassword ){
-        service.forgetPassword(newPassword);
-        return ResponseEntity.ok("Password Changed");
+    public ResponseEntity<?> forgetPassword(@RequestBody ForgotPasswordDto email){
+        service.forgetPassword(email.getEmail());
+        return ResponseEntity.ok().build();
+    }
+    @PostMapping("/reset-password")
+    public ResponseEntity<?>resetPassword(@RequestParam String token, @RequestBody ResetPasswordDto request){
+       service.resetPassword(request,token);
+       return ResponseEntity.ok("password Changed");
     }
 
 }

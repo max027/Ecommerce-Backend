@@ -37,12 +37,22 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ErrorResponse> handelRuntimeError(RuntimeException ex,HttpServletRequest request){
+        ErrorResponse response=new ErrorResponse();
+        response.setTime(LocalDateTime.now());
+        response.setPath(request.getRequestURI());
+        response.setMessage("internal server error");
+        response.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+
+        return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handelApiError(Exception ex,HttpServletRequest request){
         ErrorResponse response=new ErrorResponse();
         response.setTime(LocalDateTime.now());
         response.setPath(request.getRequestURI());
-        response.setMessage(ex.getMessage());
+        response.setMessage("internal server error");
         response.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
 
         return ResponseEntity.status(response.getStatusCode()).body(response);

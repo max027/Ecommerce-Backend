@@ -13,13 +13,4 @@ import org.hibernate.validator.constraints.Range;
 @NoArgsConstructor
 public class InviteRequest {
     private String email;
-
-    @NotBlank(message = "first name is required")
-    private String firstName;
-
-    @NotBlank(message = "last name is required")
-    private String lastName;
-
-    @Range(min = 10,max = 10,message = "invalid phone")
-    private String phone;
 }
