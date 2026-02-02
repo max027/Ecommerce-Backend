@@ -59,6 +59,10 @@ public class AuthController {
         return ResponseEntity.ok(service.signup(request));
     }
 
+    @PostMapping("/register/admin")
+    public ResponseEntity<RegisterResponse>signupAdmin(@RequestBody RegisterRequest request){
+        return ResponseEntity.ok(service.signAdmin(request));
+    }
     private ResponseEntity<?>buildResponse(ResponseCookie accessCookie,ResponseCookie refreshCookie){
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE,accessCookie.toString())

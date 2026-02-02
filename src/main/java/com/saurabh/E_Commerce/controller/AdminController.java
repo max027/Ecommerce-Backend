@@ -1,7 +1,7 @@
 package com.saurabh.E_Commerce.controller;
 
 import com.saurabh.E_Commerce.dto.AcceptInviteRequest;
-import com.saurabh.E_Commerce.dto.RegisterRequest;
+import com.saurabh.E_Commerce.dto.InviteRequest;
 import com.saurabh.E_Commerce.dto.RegisterResponse;
 import com.saurabh.E_Commerce.service.AdminService;
 import lombok.RequiredArgsConstructor;
@@ -21,19 +21,19 @@ public class AdminController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/invite")
-    public ResponseEntity<RegisterResponse> adminSignup(@RequestBody RegisterRequest request){
+    public ResponseEntity<RegisterResponse> adminSignup(@RequestBody InviteRequest request){
         adminService.inviteAdmin(request.getEmail());
         return ResponseEntity.ok().build();
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/vendor/register")
-    public ResponseEntity<RegisterResponse> vendorSignup(@RequestBody RegisterRequest request){
+    public ResponseEntity<RegisterResponse> vendorSignup(@RequestBody InviteRequest request){
         adminService.inviteVendor(request.getEmail());
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping
+    @PostMapping("/accept-invite")
     public ResponseEntity<?>acceptInvite(@RequestParam String token, @RequestBody AcceptInviteRequest request){
        adminService.acceptInvite(token,request);
        return ResponseEntity.ok("Invite accepted");

@@ -25,12 +25,12 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AdminService {
 
-    //private final EmailService emailService;
     private final String frontendUrl="http://localhost:8080/";
     private final InviteTokenRepository inviteTokenRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
     private final RolesRepository rolesRepository;
+    private final EmailService emailService;
 
     public void inviteAdmin(String email){
         createAndSendInvite(email, RolesEnum.ADMIN);
@@ -53,6 +53,9 @@ public class AdminService {
 
         inviteTokenRepository.save(inviteToken);
         //send email
+
+        String link=frontendUrl+"/accept-invite?token="+token;
+        emailService.send(email,"You are invited","Click to join:"+link);
     }
 
     public void acceptInvite(String token, AcceptInviteRequest request){
@@ -70,12 +73,14 @@ public class AdminService {
         Users users=new Users();
         users.setEmail(inviteToken.getEmail());
         users.setPassword(encoder.encode(request.getPassword()));
+        //fetch role
+        Roles roles=rolesRepository.findRolesByName(inviteToken.getRoles()).orElseThrow(
+                ()->new ApiError("Given role not found",HttpStatus.NOT_FOUND.value())
+        );
 
-//      users.setRoles(Set.of(inviteToken.getRoles()));
-
+        users.setRoles(Set.of(roles));
         inviteToken.setUsed(true);
         inviteTokenRepository.save(inviteToken);
-
     }
 
 }

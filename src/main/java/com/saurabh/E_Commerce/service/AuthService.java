@@ -57,6 +57,31 @@ public class AuthService {
                 users.getEmail()
         );
     }
+    @Transactional
+    public RegisterResponse signAdmin(RegisterRequest request){
+        Users users=userRepository.findByEmail(request.getEmail()).orElse(null);
+        if (users!=null){
+            throw new ApiError("User already exist", HttpStatus.CONFLICT.value());
+        }
+        users=new Users();
+        users.setEmail(request.getEmail());
+        users.setFirstName(request.getFirstName());
+        users.setLastName(request.getLastName());
+        users.setPhone(request.getPhone());
+        users.setPassword(encoder.encode(request.getPassword()));
+
+        Roles userRoles=rolesRepository.findRolesByName(RolesEnum.ADMIN).orElseThrow(
+                ()->new ApiError("Default role for user not found",HttpStatus.NOT_FOUND.value())
+        );
+
+        users.setRoles(Set.of(userRoles));
+        userRepository.save(users);
+
+        return new RegisterResponse(
+                users.getUserId(),
+                users.getEmail()
+        );
+    }
 
     public LoginTokens login(LoginRequest request) {
         Authentication authUser=authenticationManager.authenticate(
