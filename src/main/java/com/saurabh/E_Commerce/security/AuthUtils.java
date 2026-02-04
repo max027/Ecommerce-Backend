@@ -2,27 +2,30 @@ package com.saurabh.E_Commerce.security;
 
 import com.saurabh.E_Commerce.exception.ApiError;
 import com.saurabh.E_Commerce.models.Users;
+import com.saurabh.E_Commerce.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.time.Instant;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
+@RequiredArgsConstructor
 public class AuthUtils {
+   private final UserRepository userRepository;
    @Value("${security.jwt.secret-key}")
    private String secretKey;
 
@@ -46,7 +49,18 @@ public class AuthUtils {
       }
    }
 
-
+   public String generateEmailVerificationToken(String email,long userId){
+      Users users=userRepository.findById(userId).orElseThrow(
+              ()->new ApiError("User not found",HttpStatus.NOT_FOUND.value())
+      );
+      return Jwts.builder()
+              .subject(String.valueOf(users.getUserId()))
+              .claim("email",users.getEmail())
+              .issuedAt(new Date())
+              .expiration(Date.from(Instant.now().plus(Duration.ofMinutes(15))))
+              .signWith(getSecretKey())
+              .compact();
+   }
    public String generateToken(Users users){
       Map<String,Object>map=new HashMap<>();
       map.put("authorities",users.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList());
@@ -80,6 +94,22 @@ public class AuthUtils {
          throw new ApiError("user not authenticated", HttpStatus.UNAUTHORIZED.value());
       }
       return (Users) authentication.getPrincipal();
+   }
 
+   @Transactional
+   public void handelEmailVerification(String token){
+      if (!isTokenValid(token)){
+         throw new ApiError("Invalid Token",HttpStatus.FORBIDDEN.value());
+      }
+
+      Claims claims=extractClaims(token);
+
+      long userId=Long.parseLong(claims.getSubject());
+      Users users=userRepository.findById(userId).orElseThrow(
+              ()->new ApiError("User not found",HttpStatus.NOT_FOUND.value())
+      );
+
+      users.setVerified(true);
+      userRepository.save(users);
    }
 }

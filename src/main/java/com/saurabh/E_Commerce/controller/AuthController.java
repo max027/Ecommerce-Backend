@@ -5,6 +5,7 @@ import com.saurabh.E_Commerce.exception.ApiError;
 import com.saurabh.E_Commerce.service.AuthService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -144,5 +145,23 @@ public class AuthController {
        service.resetPassword(request,token);
        return ResponseEntity.ok("password Changed");
     }
+
+    @PostMapping("/verify")
+    public ResponseEntity<?>emailVerify(@RequestParam String token){
+        service.verifyEmail(token);
+        return ResponseEntity.ok("email verified");
+    }
+
+    @PostMapping("/send-verification")
+    public ResponseEntity<?> sendEmailVerify(){
+        service.sendVerification();
+        return ResponseEntity.ok("email send");
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserDto> getUserInfo(){
+        return ResponseEntity.ok(service.getUserInformation());
+    }
+
 
 }

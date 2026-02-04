@@ -54,9 +54,10 @@ public class Users extends Auditable implements UserDetails {
     )
     private Set<Roles> roles;
 
+    private boolean isEnabled=true;
+
     @OneToMany(cascade = CascadeType.REMOVE,orphanRemoval = true,fetch = FetchType.LAZY,mappedBy = "users")
     private Set<Address> addresses;
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -98,7 +99,12 @@ public class Users extends Auditable implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return isEnabled;
     }
+
+    public void setIsEnabled(boolean value){
+       isEnabled=value;
+    }
+
 }
 

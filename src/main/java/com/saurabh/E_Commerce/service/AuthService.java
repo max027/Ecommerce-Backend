@@ -8,8 +8,10 @@ import com.saurabh.E_Commerce.repository.ResetTokenRepository;
 import com.saurabh.E_Commerce.repository.RolesRepository;
 import com.saurabh.E_Commerce.repository.UserRepository;
 import com.saurabh.E_Commerce.security.AuthUtils;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,7 +19,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.time.Instant;
+import java.util.Base64;
 import java.util.Set;
 import java.util.UUID;
 
@@ -159,6 +163,33 @@ public class AuthService {
         userRepository.save(users);
 
         resetTokenRepository.delete(resetToken);
+    }
+
+    public void sendVerification(){
+        Users users=authUtils.getCurrentUser();
+        if (users.isVerified()){
+            throw new ApiError("user is already verified",HttpStatus.CONFLICT.value());
+        }
+
+        String token= authUtils.generateEmailVerificationToken(users.getEmail(),users.getUserId());
+        String url=frontendUrl+"/verify?token="+token;
+        emailService.send(users.getEmail(),"Email Verification","Click to Verify email"+url);
+    }
+
+    public void verifyEmail(String token) {
+        authUtils.handelEmailVerification(token);
+    }
+
+    public UserDto getUserInformation() {
+        Users users=authUtils.getCurrentUser();
+        return UserDto.builder()
+                .id(users.getUserId())
+                .email(users.getEmail())
+                .first_name(users.getFirstName())
+                .last_name(users.getLastName())
+                .phone(users.getPhone())
+                .build();
+
     }
 }
 

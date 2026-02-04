@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -22,4 +23,16 @@ public interface UserRepository extends JpaRepository<Users,Long> {
 
     Optional<Users> findByEmail(String email);
     boolean existsByEmail(String email);
+
+    @Query("""
+        SELECT DISTINCT u FROM Users  u 
+        JOIN u.roles r WHERE r.name="ADMIN"
+        """)
+    List<Users> findAllAdmins();
+
+    @Query("""
+        SELECT DISTINCT u FROM Users  u 
+        JOIN u.roles r WHERE r.name="VENDOR"
+        """)
+    List<Users> findAllVendors();
 }
