@@ -31,8 +31,11 @@ public class AdminController {
     }
 
     @GetMapping("/vendors")
-    public ResponseEntity<List<UserDto>> getAllVendors(){
-        return ResponseEntity.ok(adminService.getAllVendors());
+    public ResponseEntity<Page<UserDto>> getAllVendors(
+            @RequestParam int page,
+            @RequestParam int pageSize
+    ){
+        return ResponseEntity.ok(adminService.getAllVendors(page,pageSize));
     }
 
     @PostMapping("/invite")

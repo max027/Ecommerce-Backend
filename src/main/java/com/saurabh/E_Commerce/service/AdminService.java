@@ -114,21 +114,9 @@ public class AdminService {
 
     }
 
-    public List<UserDto> getAllVendors() {
-        List<Users>admins=userRepository.findAllVendors();
-        List<UserDto>response=new ArrayList<>();
-        for(Users admin :admins){
-            response.add(UserDto.builder()
-                    .id(admin.getUserId())
-                    .first_name(admin.getFirstName())
-                    .last_name(admin.getLastName())
-                    .phone(admin.getPhone())
-                    .email(admin.getEmail())
-                    .build()
-            );
-        }
-
-        return response;
+    public Page<UserDto> getAllVendors(int page,int pageSize) {
+        Pageable pageable=PageRequest.of(page,pageSize);
+        return userRepository.findAllVendors(pageable).map(DataMapper::convertToUserDto);
     }
 
     public void updateAdmin(long id,RegisterRequest request) {

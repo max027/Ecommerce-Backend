@@ -1,6 +1,7 @@
 package com.saurabh.E_Commerce.repository;
 
 import com.saurabh.E_Commerce.models.Users;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -35,6 +36,6 @@ public interface UserRepository extends JpaRepository<Users,Long> {
         SELECT DISTINCT u FROM Users  u 
         JOIN u.roles r WHERE r.name="VENDOR"
         """)
-    List<Users> findAllVendors();
+    Page<Users> findAllVendors(Pageable pageable);
 
 }
