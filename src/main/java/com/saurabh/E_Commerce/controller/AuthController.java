@@ -5,6 +5,7 @@ import com.saurabh.E_Commerce.exception.ApiError;
 import com.saurabh.E_Commerce.service.AuthService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -49,7 +51,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<RegisterResponse>signup(@RequestBody RegisterRequest request){
+    public ResponseEntity<RegisterResponse>signup(@Valid @RequestBody CustomerRequest request){
         return ResponseEntity.ok(service.signup(request));
     }
 
@@ -65,9 +67,9 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?>login(@RequestBody LoginRequest request){
-        LoginTokens cookies= service.login(request);
-        ResponseCookie accessCookie= ResponseCookie.from("accessToken",cookies.getAccessToken())
+    public ResponseEntity<?>login(@Valid @RequestBody LoginRequest request){
+        Map<String,String> cookies= service.login(request);
+        ResponseCookie accessCookie= ResponseCookie.from("accessToken",cookies.get("accessToken"))
                 .httpOnly(true)
                 .maxAge(Duration.ofMinutes(15))
                 .path("/")
@@ -75,7 +77,7 @@ public class AuthController {
                 .sameSite("Lax")
                 .build();
 
-        ResponseCookie refreshCookie= ResponseCookie.from("refreshToken",cookies.getRefreshToken())
+        ResponseCookie refreshCookie= ResponseCookie.from("refreshToken",cookies.get("refreshToken"))
                 .httpOnly(true)
                 .maxAge(Duration.ofDays(2))
                 .path("/")
@@ -88,9 +90,9 @@ public class AuthController {
     @PostMapping("/refresh")
     public ResponseEntity<?>refresh(HttpServletRequest request){
         String token=extractRefreshToken(request);
-        LoginTokens cookies= service.refresh(token);
+        Map<String,String> cookies= service.refresh(token);
 
-        ResponseCookie accessCookie= ResponseCookie.from("accessToken",cookies.getAccessToken())
+        ResponseCookie accessCookie= ResponseCookie.from("accessToken",cookies.get("accessToken"))
                 .httpOnly(true)
                 .maxAge(Duration.ofMinutes(15))
                 .path("/")
@@ -98,7 +100,7 @@ public class AuthController {
                 .sameSite("Lax")
                 .build();
 
-        ResponseCookie refreshCookie= ResponseCookie.from("refreshToken",cookies.getRefreshToken())
+        ResponseCookie refreshCookie= ResponseCookie.from("refreshToken",cookies.get("refreshToken"))
                 .httpOnly(true)
                 .maxAge(Duration.ofDays(2))
                 .path("/")
@@ -136,12 +138,12 @@ public class AuthController {
     }
 
     @PostMapping("/forget-password")
-    public ResponseEntity<?> forgetPassword(@RequestBody ForgotPasswordDto email){
+    public ResponseEntity<?> forgetPassword(@Valid @RequestBody ForgotPasswordDto email){
         service.forgetPassword(email.getEmail());
         return ResponseEntity.ok().build();
     }
     @PostMapping("/reset-password")
-    public ResponseEntity<?>resetPassword(@RequestParam String token, @RequestBody ResetPasswordDto request){
+    public ResponseEntity<?>resetPassword(@RequestParam String token, @Valid @RequestBody ResetPasswordDto request){
        service.resetPassword(request,token);
        return ResponseEntity.ok("password Changed");
     }

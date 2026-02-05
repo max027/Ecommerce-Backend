@@ -35,7 +35,7 @@ public class AdminController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/vendor/register")
+    @PostMapping("/vendor/invite")
     public ResponseEntity<RegisterResponse> vendorSignup(@RequestBody InviteRequest request){
         adminService.inviteVendor(request.getEmail());
         return ResponseEntity.ok().build();

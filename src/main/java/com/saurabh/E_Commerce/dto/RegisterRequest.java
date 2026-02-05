@@ -22,15 +22,13 @@ public class RegisterRequest {
     @NotBlank(message = "last name is required")
     private String lastName;
 
-    @Range(min = 10,max = 10,message = "invalid phone")
+    @NotNull
     private String phone;
 
     @NotBlank(message = "Password is required")
     @Pattern(
             regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()\\-+=])(?=\\S+$).{8,}$",
-            message = "Invalid password"
+            message = "Password must be 8-20 characters long and include at least one digit, one lowercase letter, one uppercase letter, and one special character (!@#$%^&+=.,?)"
     )
-
     private String password;
-
 }

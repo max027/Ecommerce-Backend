@@ -10,13 +10,8 @@ import lombok.Setter;
 @Setter
 @Builder
 public class PermissionResponse {
-
     private long permissionId;
-
     private String name;
-
     private String description;
-
-
     private ModuleEnum module;
 }

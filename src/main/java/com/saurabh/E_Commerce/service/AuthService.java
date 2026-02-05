@@ -4,6 +4,7 @@ import com.saurabh.E_Commerce.dto.*;
 import com.saurabh.E_Commerce.exception.ApiError;
 import com.saurabh.E_Commerce.models.*;
 import com.saurabh.E_Commerce.models.enums.RolesEnum;
+import com.saurabh.E_Commerce.repository.AddressRepository;
 import com.saurabh.E_Commerce.repository.ResetTokenRepository;
 import com.saurabh.E_Commerce.repository.RolesRepository;
 import com.saurabh.E_Commerce.repository.UserRepository;
@@ -22,9 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Base64;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -39,8 +38,9 @@ public class AuthService {
     private final String frontendUrl="http://localhost:8080/api/auth";
     private final ResetTokenRepository resetTokenRepository;
     private final EmailService emailService;
+    private final AddressRepository addressRepository;
 
-    public RegisterResponse signup(RegisterRequest request){
+    public RegisterResponse signup(CustomerRequest request){
         Users users=userRepository.findByEmail(request.getEmail()).orElse(null);
         if (users!=null){
             throw new ApiError("User already exist", HttpStatus.CONFLICT.value());
@@ -58,6 +58,19 @@ public class AuthService {
 
         users.setRoles(Set.of(userRoles));
         userRepository.save(users);
+
+        Address address=new Address();
+        address.setState(request.getAddress().getState());
+        address.setAddressType(request.getAddress().getAddressType());
+        address.setCity(request.getAddress().getCity());
+        address.setAddressLine2(request.getAddress().getAddressLine2());
+        address.setAddressLine1(request.getAddress().getAddressLine1());
+        address.setPostalCode(request.getAddress().getPostalCode());
+        address.setUsers(users);
+        address.setCountry(request.getAddress().getCountry());
+        addressRepository.save(address);
+
+        users.setAddresses(Set.of(address));
 
         return new RegisterResponse(
                 users.getUserId(),
@@ -90,7 +103,7 @@ public class AuthService {
         );
     }
 
-    public LoginTokens login(LoginRequest request) {
+    public Map<String,String> login(LoginRequest request) {
         Authentication authUser=authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
@@ -105,13 +118,13 @@ public class AuthService {
         String token= authUtils.generateToken(users);
         RefreshToken refreshToken=refreshTokenService.generateToken(users);
 
-        LoginTokens tokens=new LoginTokens();
-        tokens.setAccessToken(token);
-        tokens.setRefreshToken(refreshToken.getToken());
+        Map<String,String>map=new HashMap<>();
+        map.put("accessToken",token);
+        map.put("refreshToken",refreshToken.getToken());
 
-        return tokens;
+        return map;
     }
-    public LoginTokens refresh(String refreshToken){
+    public Map<String,String> refresh(String refreshToken){
         RefreshToken token=refreshTokenService.verify(refreshToken);
         refreshTokenService.revoke(token);
 
@@ -120,12 +133,12 @@ public class AuthService {
         String newAccessToken= authUtils.generateToken(users);
         RefreshToken newRefreshToken=refreshTokenService.generateToken(users);
 
-        LoginTokens tokens=new LoginTokens();
-        tokens.setAccessToken(newAccessToken);
-        tokens.setRefreshToken(newRefreshToken.getToken());
 
-        return tokens;
+        Map<String,String>map=new HashMap<>();
+        map.put("accessToken",newAccessToken);
+        map.put("refreshToken",newRefreshToken.getToken());
 
+        return map;
     }
     public void logout(String token){
         RefreshToken refreshToken=refreshTokenService.verify(token);
