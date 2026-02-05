@@ -15,6 +15,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +28,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AuthService {
     private final UserRepository userRepository;
     private final RolesRepository rolesRepository;
@@ -38,7 +40,6 @@ public class AuthService {
     private final ResetTokenRepository resetTokenRepository;
     private final EmailService emailService;
 
-    @Transactional
     public RegisterResponse signup(RegisterRequest request){
         Users users=userRepository.findByEmail(request.getEmail()).orElse(null);
         if (users!=null){
@@ -63,7 +64,6 @@ public class AuthService {
                 users.getEmail()
         );
     }
-    @Transactional
     public RegisterResponse signAdmin(RegisterRequest request){
         Users users=userRepository.findByEmail(request.getEmail()).orElse(null);
 
@@ -99,6 +99,9 @@ public class AuthService {
         );
         Users users=(Users) authUser.getPrincipal();
 
+        users.setLastLogin(Instant.now());
+        userRepository.save(users);
+
         String token= authUtils.generateToken(users);
         RefreshToken refreshToken=refreshTokenService.generateToken(users);
 
@@ -131,7 +134,7 @@ public class AuthService {
 
     public void forgetPassword(String email) {
         Users users=userRepository.findByEmail(email).orElseThrow(
-                ()->new ApiError("User not found",HttpStatus.NOT_FOUND.value())
+                ()->new UsernameNotFoundException("user:"+email+" not found")
         );
 
         String token= UUID.randomUUID().toString()+UUID.randomUUID();

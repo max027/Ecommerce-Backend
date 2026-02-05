@@ -4,6 +4,8 @@ import com.saurabh.E_Commerce.dto.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -36,7 +38,28 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ErrorResponse>handelBadCredential(BadCredentialsException ex,HttpServletRequest request){
+        ErrorResponse response=new ErrorResponse();
+        response.setTime(LocalDateTime.now());
+        response.setPath(request.getRequestURI());
+        response.setMessage(ex.getMessage());
+        response.setStatusCode(HttpStatus.BAD_REQUEST.value());
 
+        return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<ErrorResponse>handelUserNotFound(UsernameNotFoundException ex,HttpServletRequest request){
+
+        ErrorResponse response=new ErrorResponse();
+        response.setTime(LocalDateTime.now());
+        response.setPath(request.getRequestURI());
+        response.setMessage(ex.getMessage());
+        response.setStatusCode(HttpStatus.NOT_FOUND.value());
+
+        return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handelRuntimeError(RuntimeException ex,HttpServletRequest request){
         ErrorResponse response=new ErrorResponse();
@@ -47,6 +70,7 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handelApiError(Exception ex,HttpServletRequest request){
         ErrorResponse response=new ErrorResponse();
@@ -57,6 +81,5 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
-
 
 }

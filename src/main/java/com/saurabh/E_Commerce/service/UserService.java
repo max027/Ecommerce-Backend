@@ -13,9 +13,4 @@ public class UserService {
         this.userRepository=userRepository;
     }
 
-    @Transactional
-    public void updateLastLogin(){
-        long userId=1;//change after implementing jwt
-        userRepository.updateLastLogin(userId, Instant.now());
-    }
 }

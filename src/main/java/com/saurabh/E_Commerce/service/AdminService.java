@@ -14,6 +14,7 @@ import com.saurabh.E_Commerce.repository.RolesRepository;
 import com.saurabh.E_Commerce.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,7 +48,7 @@ public class AdminService {
 
     private Users fetchUsers(long id){
         return userRepository.findById(id).orElseThrow(
-                ()->new ApiError("vendor not found",HttpStatus.NOT_FOUND.value())
+                ()->new UsernameNotFoundException("user with id:"+id+" not found")
         );
     }
 
