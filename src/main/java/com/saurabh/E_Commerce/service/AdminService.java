@@ -11,7 +11,11 @@ import com.saurabh.E_Commerce.repository.InviteTokenRepository;
 import com.saurabh.E_Commerce.repository.PermissionsRepository;
 import com.saurabh.E_Commerce.repository.RolesRepository;
 import com.saurabh.E_Commerce.repository.UserRepository;
+import com.saurabh.E_Commerce.utils.DataMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -223,5 +227,43 @@ public class AdminService {
             permissionResponses.add(response);
         }
         return permissionResponses;
+    }
+
+    public Page<UserDto> getAllUsers(int pageNo, int pageSize) {
+        Pageable pageable= PageRequest.of(pageNo,pageSize);
+        return userRepository.findAll(pageable).map(DataMapper::convertToUserDto);
+    }
+
+    public UserDto getUsersById(long id) {
+        Users users=fetchUsers(id);
+        return UserDto.builder()
+                .id(users.getUserId())
+                .first_name(users.getFirstName())
+                .last_name(users.getLastName())
+                .phone(users.getPhone())
+                .email(users.getEmail())
+                .build();
+    }
+
+    public void deleteUsers(long id) {
+        Users users=fetchUsers(id);
+        userRepository.delete(users);
+    }
+
+    public void suspendUsers(long id) {
+        Users users=fetchUsers(id);
+        users.setIsEnabled(false);
+        userRepository.save(users);
+    }
+
+    public void assignRoles(long id, AssignRolesDto request) {
+        Users users=fetchUsers(id);
+        Set<Roles>roles=new HashSet<>();
+        for (long i:request.getRolesId()){
+            Roles assignRole=rolesRepository.findById(i).orElseThrow();
+            roles.add(assignRole);
+        }
+        users.setRoles(roles);
+        userRepository.save(users);
     }
 }

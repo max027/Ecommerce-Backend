@@ -2,9 +2,16 @@ package com.saurabh.E_Commerce.controller;
 
 import com.saurabh.E_Commerce.dto.*;
 import com.saurabh.E_Commerce.models.Permissions;
+import com.saurabh.E_Commerce.models.Users;
 import com.saurabh.E_Commerce.service.AdminService;
 import jakarta.annotation.security.PermitAll;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.web.PagedModel;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.data.web.PagedResourcesAssemblerArgumentResolver;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -18,7 +25,6 @@ import java.util.List;
 @PreAuthorize("hasRole('ADMIN')")
 public class AdminController {
     private final AdminService adminService;
-
     @GetMapping("/")
     public ResponseEntity<List<UserDto>> getAllAdmin(){
         return ResponseEntity.ok(adminService.getAllAdmin());
@@ -94,5 +100,36 @@ public class AdminController {
     @GetMapping("/permissions")
     public ResponseEntity<List<PermissionResponse>> getPermissons(){
         return ResponseEntity.ok(adminService.getAllPermissions());
+    }
+
+    @GetMapping("/users")
+    public ResponseEntity<Page<UserDto>> getAllUsers(
+            @RequestParam int page,
+            @RequestParam int pageSize
+    ){
+        return ResponseEntity.ok(adminService.getAllUsers(page, pageSize));
+    }
+
+    @GetMapping("/users/{id}")
+    public ResponseEntity<UserDto> getUsersById(@PathVariable long id){
+        return ResponseEntity.ok(adminService.getUsersById(id));
+    }
+
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<?> deleteUsers(@PathVariable long id){
+        adminService.deleteUsers(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/users/{id}/suspend")
+    public ResponseEntity<?> suspendUser(@PathVariable long id){
+        adminService.suspendUsers(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/users/{id}/roles")
+    public ResponseEntity<?> assignRoles(@PathVariable long id,@Valid @RequestBody AssignRolesDto request){
+        adminService.assignRoles(id,request);
+        return ResponseEntity.ok("roles assigned to userId:"+id);
     }
 }

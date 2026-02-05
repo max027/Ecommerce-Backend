@@ -31,5 +31,15 @@ PUT     /api/admin/roles/:id
 DELETE  /api/admin/roles/:id
 GET     /api/admin/permissions
 ``
-
+## Users
+``text
+GET     /api/users/profile
+PUT     /api/users/profile
+POST    /api/users/address
+PUT     /api/users/address
+GET     /api/users/address/:id
+PUT     /api/users/address/:id
+DELETE  /api/users/address/:id
+PUT     /api/users/address/:id/set-default
+``
 
