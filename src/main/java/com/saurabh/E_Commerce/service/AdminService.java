@@ -1,13 +1,13 @@
 package com.saurabh.E_Commerce.service;
 
-import com.saurabh.E_Commerce.dto.AcceptInviteRequest;
-import com.saurabh.E_Commerce.dto.RegisterRequest;
-import com.saurabh.E_Commerce.dto.RegisterResponse;
-import com.saurabh.E_Commerce.dto.UserDto;
+import com.saurabh.E_Commerce.dto.*;
 import com.saurabh.E_Commerce.exception.ApiError;
 import com.saurabh.E_Commerce.models.InviteToken;
+import com.saurabh.E_Commerce.models.Permissions;
 import com.saurabh.E_Commerce.models.Roles;
 import com.saurabh.E_Commerce.models.Users;
+import com.saurabh.E_Commerce.models.enums.ModuleEnum;
+import com.saurabh.E_Commerce.models.enums.PermissionEnum;
 import com.saurabh.E_Commerce.models.enums.RolesEnum;
 import com.saurabh.E_Commerce.repository.InviteTokenRepository;
 import com.saurabh.E_Commerce.repository.RolesRepository;
@@ -19,12 +19,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -163,5 +159,27 @@ public class AdminService {
         Users users=fetchUsers(id);
         users.setIsEnabled(false);
         userRepository.save(users);
+    }
+
+    public void updateRoles(RoleRequest request) {
+        Roles roles=rolesRepository.findRolesByName(RolesEnum.valueOf(request.getName())).orElse(null);
+        if (roles!=null){
+            throw new ApiError("Roles "+request.getName()+" already exists",HttpStatus.CONFLICT.value());
+        }
+
+        roles=new Roles();
+        roles.setName(RolesEnum.valueOf(request.getName()));
+        roles.setDescription(request.getDescription());
+        Set<Permissions>permissionsSet=new HashSet<>();
+        for(String permission:request.getPermissions()){
+            Permissions permissions= new Permissions();
+            permissions.setName(PermissionEnum.valueOf(permission));
+            permissions.setDescription(request.getDescription());
+            permissions.setModule(ModuleEnum.ROLES);
+            permissionsSet.add(permissions);
+        }
+        roles.setPermissions(permissionsSet);
+
+        rolesRepository.save(roles);
     }
 }

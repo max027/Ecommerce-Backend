@@ -60,6 +60,18 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse>handelIlleagalException(IllegalArgumentException ex,HttpServletRequest request){
+
+        ErrorResponse response=new ErrorResponse();
+        response.setTime(LocalDateTime.now());
+        response.setPath(request.getRequestURI());
+        response.setMessage(ex.getMessage());
+        response.setStatusCode(HttpStatus.BAD_REQUEST.value());
+
+        return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handelRuntimeError(RuntimeException ex,HttpServletRequest request){
         ErrorResponse response=new ErrorResponse();

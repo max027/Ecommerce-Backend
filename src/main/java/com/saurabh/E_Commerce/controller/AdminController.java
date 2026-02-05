@@ -73,4 +73,10 @@ public class AdminController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/roles")
+    public ResponseEntity<?> updateRoles(@RequestBody RoleRequest request){
+        adminService.updateRoles(request);
+       return ResponseEntity.ok("updated roles");
+    }
+
 }
