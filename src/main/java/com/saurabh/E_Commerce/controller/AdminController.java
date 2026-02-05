@@ -1,9 +1,9 @@
 package com.saurabh.E_Commerce.controller;
 
 import com.saurabh.E_Commerce.dto.*;
+import com.saurabh.E_Commerce.models.Permissions;
 import com.saurabh.E_Commerce.service.AdminService;
 import jakarta.annotation.security.PermitAll;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -74,9 +74,25 @@ public class AdminController {
     }
 
     @PostMapping("/roles")
-    public ResponseEntity<?> updateRoles(@RequestBody RoleRequest request){
-        adminService.updateRoles(request);
-       return ResponseEntity.ok("updated roles");
+    public ResponseEntity<?> createRoles(@RequestBody RoleRequest request){
+        adminService.createRoles(request);
+       return ResponseEntity.ok("roles created");
     }
 
+    @PutMapping("/roles/{id}")
+    public ResponseEntity<?> updateRoles(@RequestBody RoleRequest request,@PathVariable long id){
+        adminService.updateRoles(request,id);
+        return ResponseEntity.ok("roles updated");
+    }
+
+    @DeleteMapping("/roles/{id}")
+    public ResponseEntity<?> deleteRoles(@PathVariable long id){
+        adminService.deleteRoles(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/permissions")
+    public ResponseEntity<List<PermissionResponse>> getPermissons(){
+        return ResponseEntity.ok(adminService.getAllPermissions());
+    }
 }

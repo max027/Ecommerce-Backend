@@ -21,9 +21,8 @@ public class Roles extends Auditable {
     @Column(name = "id")
     private long roleId;
 
-    @Enumerated(EnumType.STRING)
     @Column(unique = true,nullable = false)
-    private RolesEnum name;
+    private String name;
 
     private String description;
 

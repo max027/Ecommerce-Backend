@@ -24,8 +24,7 @@ public class InviteToken {
     @Column(nullable = false)
     private String email;
 
-    @Enumerated(EnumType.STRING)
-    private RolesEnum roles;
+    private String roles;
 
     @Column(nullable = false,unique = true)
     private String token;

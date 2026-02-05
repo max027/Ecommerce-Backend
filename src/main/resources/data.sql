@@ -1,8 +1,8 @@
 INSERT INTO roles (name, description,created_at,updated_at) VALUES
-                                                                ('admin', 'Full system access',now(),now()),
-                                                                ('customer', 'Regular customer access',now(),now()),
-                                                                ('vendor', 'Product vendor access',now(),now()),
-                                                                ('support', 'Customer support access',now(),now());
+                                                                ('ADMIN', 'Full system access',now(),now()),
+                                                                ('CUSTOMER', 'Regular customer access',now(),now()),
+                                                                ('VENDOR', 'Product vendor access',now(),now()),
+                                                                ('SUPPORT', 'Customer support access',now(),now());
 
 insert into permissions (name, description, module, created_at, updated_at) VALUES
 -- payments

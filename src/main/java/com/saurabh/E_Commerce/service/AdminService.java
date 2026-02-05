@@ -7,9 +7,8 @@ import com.saurabh.E_Commerce.models.Permissions;
 import com.saurabh.E_Commerce.models.Roles;
 import com.saurabh.E_Commerce.models.Users;
 import com.saurabh.E_Commerce.models.enums.ModuleEnum;
-import com.saurabh.E_Commerce.models.enums.PermissionEnum;
-import com.saurabh.E_Commerce.models.enums.RolesEnum;
 import com.saurabh.E_Commerce.repository.InviteTokenRepository;
+import com.saurabh.E_Commerce.repository.PermissionsRepository;
 import com.saurabh.E_Commerce.repository.RolesRepository;
 import com.saurabh.E_Commerce.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,14 +31,15 @@ public class AdminService {
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
     private final RolesRepository rolesRepository;
+    private final PermissionsRepository permissionsRepository;
     private final EmailService emailService;
 
     public void inviteAdmin(String email){
-        createAndSendInvite(email, RolesEnum.ADMIN);
+        createAndSendInvite(email, "ADMIN");
     }
 
     public void inviteVendor(String email){
-        createAndSendInvite(email, RolesEnum.ADMIN);
+        createAndSendInvite(email, "VENDOR");
     }
 
     private Users fetchUsers(long id){
@@ -48,7 +48,7 @@ public class AdminService {
         );
     }
 
-    private void createAndSendInvite(String email, RolesEnum rolesEnum) {
+    private void createAndSendInvite(String email, String rolesEnum) {
         if(userRepository.existsByEmail(email)){
             throw  new ApiError("user already exist", HttpStatus.CONFLICT.value());
         }
@@ -161,25 +161,67 @@ public class AdminService {
         userRepository.save(users);
     }
 
-    public void updateRoles(RoleRequest request) {
-        Roles roles=rolesRepository.findRolesByName(RolesEnum.valueOf(request.getName())).orElse(null);
+    public void createRoles(RoleRequest request) {
+        Roles roles=rolesRepository.findRolesByName(request.getName()).orElse(null);
         if (roles!=null){
             throw new ApiError("Roles "+request.getName()+" already exists",HttpStatus.CONFLICT.value());
         }
 
         roles=new Roles();
-        roles.setName(RolesEnum.valueOf(request.getName()));
+        roles.setName(request.getName());
         roles.setDescription(request.getDescription());
         Set<Permissions>permissionsSet=new HashSet<>();
         for(String permission:request.getPermissions()){
             Permissions permissions= new Permissions();
-            permissions.setName(PermissionEnum.valueOf(permission));
+            permissions.setName(permission);
             permissions.setDescription(request.getDescription());
             permissions.setModule(ModuleEnum.ROLES);
             permissionsSet.add(permissions);
+            permissionsRepository.save(permissions);
         }
         roles.setPermissions(permissionsSet);
 
         rolesRepository.save(roles);
+    }
+
+    public void updateRoles(RoleRequest request,long id) {
+       Roles roles=rolesRepository.findById(id).orElseThrow();
+       roles.setRoleId(id);
+       roles.setName(request.getName());
+       roles.setDescription(request.getDescription());
+
+        Set<Permissions>permissionsSet=new HashSet<>();
+        for(String permission:request.getPermissions()){
+            Permissions permissions= new Permissions();
+            permissions.setName(permission);
+            permissions.setDescription(request.getDescription());
+            permissions.setModule(ModuleEnum.ROLES);
+            permissionsSet.add(permissions);
+            permissionsRepository.save(permissions);
+        }
+        roles.setPermissions(permissionsSet);
+
+        rolesRepository.save(roles);
+    }
+
+    public void deleteRoles(long id) {
+        Roles roles=rolesRepository.findById(id).orElseThrow(()->new ApiError("Roles "+id+" not found",HttpStatus.NOT_FOUND.value()));
+        rolesRepository.delete(roles);
+
+    }
+
+    public List<PermissionResponse> getAllPermissions() {
+        List<Permissions>permissions=permissionsRepository.findAll();
+        List<PermissionResponse>permissionResponses=new ArrayList<>();
+        for(Permissions permission:permissions){
+            PermissionResponse response=PermissionResponse.builder()
+                    .permissionId(permission.getPermissionId())
+                    .name(permission.getName())
+                    .description(permission.getDescription())
+                    .module(permission.getModule())
+                    .build();
+            permissionResponses.add(response);
+        }
+        return permissionResponses;
     }
 }

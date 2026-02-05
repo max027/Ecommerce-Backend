@@ -52,7 +52,7 @@ public class AuthService {
         users.setPhone(request.getPhone());
         users.setPassword(encoder.encode(request.getPassword()));
 
-        Roles userRoles=rolesRepository.findRolesByName(RolesEnum.CUSTOMER).orElseThrow(
+        Roles userRoles=rolesRepository.findRolesByName("CUSTOMER").orElseThrow(
                 ()->new ApiError("Default role for user not found",HttpStatus.NOT_FOUND.value())
         );
 
@@ -77,7 +77,7 @@ public class AuthService {
         users.setPhone(request.getPhone());
         users.setPassword(encoder.encode(request.getPassword()));
 
-        Roles userRoles=rolesRepository.findRolesByName(RolesEnum.ADMIN).orElseThrow(
+        Roles userRoles=rolesRepository.findRolesByName("ADMIN").orElseThrow(
                 ()->new ApiError("Default role for user not found",HttpStatus.NOT_FOUND.value())
         );
 

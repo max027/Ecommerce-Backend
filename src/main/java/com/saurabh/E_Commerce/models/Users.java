@@ -63,10 +63,10 @@ public class Users extends Auditable implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<GrantedAuthority>authorities=new HashSet<>();
         for (Roles roles1:roles){
-            authorities.add(new SimpleGrantedAuthority("ROLE_"+roles1.getName().toString()));
+            authorities.add(new SimpleGrantedAuthority("ROLE_"+roles1.getName()));
 
             for(Permissions permissions:roles1.getPermissions()){
-                authorities.add(new SimpleGrantedAuthority(permissions.getName().toString()));
+                authorities.add(new SimpleGrantedAuthority(permissions.getName()));
             }
         }
         return authorities;

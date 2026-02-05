@@ -21,9 +21,8 @@ public class Permissions extends Auditable{
     @Column(name = "id")
     private long permissionId;
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private PermissionEnum name;
+    private String name;
 
     private String description;
 
