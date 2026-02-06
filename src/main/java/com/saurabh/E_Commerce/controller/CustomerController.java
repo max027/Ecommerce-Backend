@@ -1,6 +1,6 @@
 package com.saurabh.E_Commerce.controller;
 
-import com.saurabh.E_Commerce.dto.AddressRequest;
+import com.saurabh.E_Commerce.dto.AddressDto;
 import com.saurabh.E_Commerce.dto.CustomerResponse;
 import com.saurabh.E_Commerce.dto.UserDto;
 import com.saurabh.E_Commerce.service.CustomerService;
@@ -31,23 +31,23 @@ public class CustomerController {
     }
 
     @GetMapping("/address")
-    public ResponseEntity<Set<AddressRequest>> getAddress(){
+    public ResponseEntity<Set<AddressDto>> getAddress(){
         return ResponseEntity.ok(customerService.getAddress());
     }
 
     @PostMapping("/address")
-    public ResponseEntity<?> addAddress(@Valid @RequestBody AddressRequest request){
+    public ResponseEntity<?> addAddress(@Valid @RequestBody AddressDto request){
         customerService.addAddress(request);
         return ResponseEntity.ok("new address added");
     }
 
     @PutMapping("/address/{id}")
-    public ResponseEntity<?> updateAddress(@Valid @RequestBody AddressRequest request,@PathVariable  Long id){
+    public ResponseEntity<?> updateAddress(@Valid @RequestBody AddressDto request, @PathVariable  Long id){
         customerService.updateAddress(request,id);
         return ResponseEntity.ok("address updated");
     }
     @GetMapping("/address/{id}")
-    public ResponseEntity<AddressRequest> getSpecificAddress(@PathVariable  Long id){
+    public ResponseEntity<AddressDto> getSpecificAddress(@PathVariable  Long id){
         return ResponseEntity.ok(customerService.getSpecificAddress(id));
     }
 

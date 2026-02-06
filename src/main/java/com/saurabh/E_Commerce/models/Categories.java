@@ -9,6 +9,8 @@ import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.util.List;
+
 @Entity
 @Table(name = "categories")
 @Getter
@@ -32,4 +34,7 @@ public class Categories extends Auditable{
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Categories parentId;
+
+    @OneToMany(mappedBy = "categories",fetch=FetchType.LAZY,cascade = {CascadeType.MERGE,CascadeType.PERSIST})
+    private List<Products> products;
 }

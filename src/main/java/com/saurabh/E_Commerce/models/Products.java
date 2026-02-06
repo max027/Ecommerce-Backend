@@ -29,6 +29,8 @@ public class Products extends Auditable{
     @Column(nullable = false,unique = true)
     private String sku;
 
+    private String slug;
+
     private String description;
 
     @ManyToOne
@@ -48,4 +50,7 @@ public class Products extends Auditable{
 
     @OneToMany(mappedBy = "products",fetch = FetchType.EAGER,cascade = {CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REMOVE})
     private List<ProductImage> images;
+
+    @OneToMany(mappedBy = "products",fetch = FetchType.LAZY,cascade = {CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REMOVE})
+    private List<Review>reviews;
 }

@@ -100,14 +100,8 @@ public class AdminService {
         List<Users>admins=userRepository.findAllAdmins();
         List<UserDto>response=new ArrayList<>();
         for(Users admin :admins){
-            response.add(UserDto.builder()
-                    .id(admin.getUserId())
-                    .first_name(admin.getFirstName())
-                    .last_name(admin.getLastName())
-                    .phone(admin.getPhone())
-                    .email(admin.getEmail())
-                    .build()
-            );
+            UserDto dto=DataMapper.convertToUserDto(admin);
+            response.add(dto);
         }
 
         return response;
@@ -224,13 +218,7 @@ public class AdminService {
 
     public UserDto getUsersById(long id) {
         Users users=fetchUsers(id);
-        return UserDto.builder()
-                .id(users.getUserId())
-                .first_name(users.getFirstName())
-                .last_name(users.getLastName())
-                .phone(users.getPhone())
-                .email(users.getEmail())
-                .build();
+        return DataMapper.convertToUserDto(users);
     }
 
     public void deleteUsers(long id) {

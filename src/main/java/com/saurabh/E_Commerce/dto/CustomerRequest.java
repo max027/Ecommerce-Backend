@@ -1,6 +1,5 @@
 package com.saurabh.E_Commerce.dto;
 
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -32,7 +31,7 @@ public class CustomerRequest {
     )
     private String password;
 
-    private AddressRequest address;
+    private AddressDto address;
 
 
 

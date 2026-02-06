@@ -1,6 +1,6 @@
 package com.saurabh.E_Commerce.service;
 
-import com.saurabh.E_Commerce.dto.AddressRequest;
+import com.saurabh.E_Commerce.dto.AddressDto;
 import com.saurabh.E_Commerce.dto.CustomerResponse;
 import com.saurabh.E_Commerce.dto.UserDto;
 import com.saurabh.E_Commerce.exception.ApiError;
@@ -9,15 +9,12 @@ import com.saurabh.E_Commerce.models.Users;
 import com.saurabh.E_Commerce.repository.AddressRepository;
 import com.saurabh.E_Commerce.repository.UserRepository;
 import com.saurabh.E_Commerce.security.AuthUtils;
-import jakarta.mail.search.SearchTerm;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Service
@@ -36,7 +33,7 @@ public class CustomerService {
 
         Users users=authUtils.getCurrentUser();
         if (users.getUserId() !=address.getUsers().getUserId()){
-            throw new ApiError("Address not found",HttpStatus.NOT_FOUND.value());
+            throw new ApiError("unauthorized",HttpStatus.UNAUTHORIZED.value());
         }
 
         return address;
@@ -44,10 +41,10 @@ public class CustomerService {
     public CustomerResponse getProfile() {
         Users users=authUtils.getCurrentUser();
 
-        Set<AddressRequest>addressRequests=new HashSet<>();
+        Set<AddressDto> addressDtos =new HashSet<>();
         Set<Address>addresses=users.getAddresses();
         for(Address address:addresses){
-            AddressRequest request=new AddressRequest();
+            AddressDto request=new AddressDto();
             request.setAddressType(address.getAddressType());
             request.setCity(address.getCity());
             request.setCountry(address.getCountry());
@@ -55,14 +52,14 @@ public class CustomerService {
             request.setAddressLine2(address.getAddressLine2());
             request.setState(address.getState());
             request.setPostalCode(address.getPostalCode());
-            addressRequests.add(request);
+            addressDtos.add(request);
         }
 
         return CustomerResponse.builder()
                 .id(users.getUserId())
                 .email(users.getEmail())
                 .phone(users.getPhone())
-                .address(addressRequests)
+                .address(addressDtos)
                 .first_name(users.getFirstName())
                 .last_name(users.getLastName())
                 .build();
@@ -78,13 +75,13 @@ public class CustomerService {
        userRepository.save(users);
     }
 
-    public Set<AddressRequest> getAddress() {
+    public Set<AddressDto> getAddress() {
         Users users=authUtils.getCurrentUser();
 
-        Set<AddressRequest>addressRequests=new HashSet<>();
+        Set<AddressDto> addressDtos =new HashSet<>();
         Set<Address>addresses=users.getAddresses();
         for(Address address:addresses){
-            AddressRequest request=new AddressRequest();
+            AddressDto request=new AddressDto();
             request.setAddressType(address.getAddressType());
             request.setCity(address.getCity());
             request.setCountry(address.getCountry());
@@ -92,13 +89,13 @@ public class CustomerService {
             request.setAddressLine2(address.getAddressLine2());
             request.setState(address.getState());
             request.setPostalCode(address.getPostalCode());
-            addressRequests.add(request);
+            addressDtos.add(request);
         }
 
-        return addressRequests;
+        return addressDtos;
     }
 
-    public void addAddress(AddressRequest request) {
+    public void addAddress(AddressDto request) {
         Users users=authUtils.getCurrentUser();
 
         Address address=new Address();
@@ -116,7 +113,7 @@ public class CustomerService {
 
     }
 
-    public void updateAddress(AddressRequest request, Long id) {
+    public void updateAddress(AddressDto request, Long id) {
        Address address=fetchAddress(id);
 
        address.setAddressId(id);
@@ -130,16 +127,16 @@ public class CustomerService {
        addressRepository.save(address);
     }
 
-    public AddressRequest getSpecificAddress(Long id) {
+    public AddressDto getSpecificAddress(Long id) {
         Address address=fetchAddress(id);
-        AddressRequest addressRequest=new AddressRequest();
-        addressRequest.setCountry(address.getCountry());
-        addressRequest.setCity(address.getCity());
-        addressRequest.setState(address.getState());
-        addressRequest.setAddressLine1(address.getAddressLine1());
-        addressRequest.setAddressLine2(address.getAddressLine2());
-        addressRequest.setPostalCode(address.getPostalCode());
-        return addressRequest;
+        AddressDto addressDto =new AddressDto();
+        addressDto.setCountry(address.getCountry());
+        addressDto.setCity(address.getCity());
+        addressDto.setState(address.getState());
+        addressDto.setAddressLine1(address.getAddressLine1());
+        addressDto.setAddressLine2(address.getAddressLine2());
+        addressDto.setPostalCode(address.getPostalCode());
+        return addressDto;
      }
 
     public void deleteAddress(Long id) {

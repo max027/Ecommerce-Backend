@@ -1,6 +1,5 @@
 package com.saurabh.E_Commerce.dto;
 
-import com.saurabh.E_Commerce.models.Address;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,5 +15,5 @@ public class CustomerResponse {
     private String first_name;
     private String last_name;
     private String phone;
-    private Set<AddressRequest> address;
+    private Set<AddressDto> address;
 }

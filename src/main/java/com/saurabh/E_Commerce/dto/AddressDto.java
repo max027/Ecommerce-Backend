@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AddressRequest {
+public class AddressDto {
     @NotNull
     private String addressType;
 
