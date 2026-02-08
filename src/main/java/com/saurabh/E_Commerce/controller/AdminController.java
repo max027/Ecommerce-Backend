@@ -39,32 +39,32 @@ public class AdminController {
     }
 
     @PostMapping("/invite")
-    public ResponseEntity<RegisterResponse> adminSignup(@RequestBody InviteRequest request){
+    public ResponseEntity<RegisterResponse> adminSignup(@Valid @RequestBody InviteRequest request){
         adminService.inviteAdmin(request.getEmail());
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/vendor/invite")
-    public ResponseEntity<RegisterResponse> vendorSignup(@RequestBody InviteRequest request){
+    public ResponseEntity<RegisterResponse> vendorSignup(@Valid @RequestBody InviteRequest request){
         adminService.inviteVendor(request.getEmail());
         return ResponseEntity.ok().build();
     }
 
     @PermitAll
     @PostMapping("/accept-invite")
-    public ResponseEntity<?>acceptInvite(@RequestParam String token, @RequestBody AcceptInviteRequest request){
+    public ResponseEntity<?>acceptInvite(@RequestParam String token, @Valid @RequestBody AcceptInviteRequest request){
        adminService.acceptInvite(token,request);
        return ResponseEntity.ok("Invite accepted");
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?>updateAdmin(@PathVariable long id, @RequestBody RegisterRequest request){
+    public ResponseEntity<?>updateAdmin(@PathVariable long id, @Valid @RequestBody RegisterRequest request){
         adminService.updateAdmin(id,request);
        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/vendors/{id}")
-    public ResponseEntity<?>updateVendors(@PathVariable long id, @RequestBody RegisterRequest request){
+    public ResponseEntity<?>updateVendors(@PathVariable long id, @Valid @RequestBody RegisterRequest request){
         adminService.updateVendors(id,request);
         return ResponseEntity.ok().build();
     }
@@ -83,13 +83,13 @@ public class AdminController {
     }
 
     @PostMapping("/roles")
-    public ResponseEntity<?> createRoles(@RequestBody RoleRequest request){
+    public ResponseEntity<?> createRoles(@Valid @RequestBody RoleRequest request){
         adminService.createRoles(request);
        return ResponseEntity.ok("roles created");
     }
 
     @PutMapping("/roles/{id}")
-    public ResponseEntity<?> updateRoles(@RequestBody RoleRequest request,@PathVariable long id){
+    public ResponseEntity<?> updateRoles(@Valid @RequestBody RoleRequest request,@PathVariable long id){
         adminService.updateRoles(request,id);
         return ResponseEntity.ok("roles updated");
     }

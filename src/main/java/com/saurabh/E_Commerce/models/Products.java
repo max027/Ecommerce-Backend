@@ -48,7 +48,7 @@ public class Products extends Auditable{
     @Column(name = "is_active")
     private boolean isActive=true;
 
-    @OneToMany(mappedBy = "products",fetch = FetchType.EAGER,cascade = {CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REMOVE})
+    @OneToMany(mappedBy = "products",fetch = FetchType.EAGER,cascade =CascadeType.ALL)
     private List<ProductImage> images;
 
     @OneToMany(mappedBy = "products",fetch = FetchType.LAZY,cascade = {CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REMOVE})

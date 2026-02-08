@@ -55,18 +55,16 @@ public class JwtFilter extends OncePerRequestFilter {
             }
             if (token != null && authUtils.isTokenValid(token)) {
                 String username = authUtils.getUsername(token);
-
                 List<String> authorities = authUtils.getAuthorities(token);
                 List<? extends GrantedAuthority> grantedAuthorities = authorities.stream()
                         .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
 
                 if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                    Users users = userRepository.findByEmail(username).orElseThrow(() -> new ApiError("User not found", HttpStatus.NOT_FOUND.value()));
+                    Users users = userRepository.findByEmail(username).orElseThrow(() -> new ApiError("User not found in context", HttpStatus.NOT_FOUND.value()));
                     UsernamePasswordAuthenticationToken token1 =
                             UsernamePasswordAuthenticationToken.authenticated(
                                     users, null, grantedAuthorities
                             );
-                    System.out.println(users);
                     SecurityContextHolder.getContext().setAuthentication(token1);
                 }
             }
@@ -74,5 +72,11 @@ public class JwtFilter extends OncePerRequestFilter {
             resolver.resolveException(request,response,null,e);
         }
         filterChain.doFilter(request, response);
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path=request.getServletPath();
+        return path.startsWith("/api/auth");
     }
 }

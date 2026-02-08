@@ -49,3 +49,30 @@ WHERE r.name = 'customer';
 insert into role_permission (role_id,permission_id)
 select r.id,p.id from roles r join permissions p on p.name in ("VIEW_PRODUCT","CREATE_PRODUCT","UPDATE_PRODUCT","DELETE_PRODUCT","VIEW_CATEGORY","UPDATE_INVENTORY","ADJUST_STOCK","VIEW_ORDERS","MANAGE_ORDERS")
 where r.name="vendor";
+
+INSERT INTO categories
+(name, description, is_active, slug, created_at, updated_at, category_id)
+VALUES
+    ('Electronics', 'Electronic items and gadgets', true, 'electronics', NOW(), NOW(), NULL),
+
+    ('Mobile Phones', 'Smartphones and accessories', true, 'mobile-phones', NOW(), NOW(), 1),
+
+    ('Laptops', 'Personal and gaming laptops', true, 'laptops', NOW(), NOW(), 1),
+
+    ('Headphones', 'Wired and wireless headphones', true, 'headphones', NOW(), NOW(), 1),
+
+    ('Home Appliances', 'Daily household appliances', true, 'home-appliances', NOW(), NOW(), NULL);
+
+
+INSERT INTO products
+(name, sku, slug, price, discount_price, category_id, stock_quantity, is_active, created_at, updated_at)
+VALUES
+    ('iPhone 15', 'SKU-IP15', 'iphone-15', 79999, 74999, 2, 50, true, NOW(), NOW()),
+
+    ('Samsung Galaxy S24', 'SKU-S24', 'samsung-galaxy-s24', 69999, 64999, 2, 40, true, NOW(), NOW()),
+
+    ('Dell XPS 15', 'SKU-DXPS15', 'dell-xps-15', 149999, 139999, 3, 20, true, NOW(), NOW()),
+
+    ('Sony WH-1000XM5', 'SKU-SONYXM5', 'sony-wh-1000xm5', 29999, 26999, 4, 60, true, NOW(), NOW()),
+
+    ('LG Washing Machine', 'SKU-LGWM01', 'lg-washing-machine', 45999, 41999, 5, 15, true, NOW(), NOW());

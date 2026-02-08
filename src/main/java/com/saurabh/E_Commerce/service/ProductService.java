@@ -9,6 +9,8 @@ import com.saurabh.E_Commerce.repository.CategoriesRepository;
 import com.saurabh.E_Commerce.repository.ProductImageRepository;
 import com.saurabh.E_Commerce.repository.ProductsRepository;
 import com.saurabh.E_Commerce.utils.DataMapper;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,6 +18,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,12 +27,14 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
+@Validated
 public class ProductService {
     private final ProductsRepository productsRepository;
     private final CategoriesRepository categoriesRepository;
     private final ProductImageRepository productImageRepository;
 
-    private Products fetchProduct(long id){
+    private Products fetchProduct(@NotNull long id){
         return productsRepository.findById(id).orElseThrow(
                 ()->new ApiError("No product found id:"+id, HttpStatus.NOT_FOUND.value())
         );
@@ -39,7 +45,7 @@ public class ProductService {
         return productsRepository.findAllRange(pageable,minPrice,maxPrice).map(DataMapper::convertToProductDto);
     }
 
-    public ProductDto getProductById(long id) {
+    public ProductDto getProductById(@NotNull long id) {
        Products products=fetchProduct(id);
        return DataMapper.convertToProductDto(products);
     }
@@ -49,14 +55,14 @@ public class ProductService {
         return productsRepository.findAllReviews(pageable).map(DataMapper::converToReviewsDto);
     }
 
-    public ProductDto getBySlug(String slug) {
+    public ProductDto getBySlug(@NotNull String slug) {
         Products products=productsRepository.findBySlug(slug).orElseThrow(
                 ()->new ApiError("product not found "+slug,HttpStatus.NOT_FOUND.value())
         );
         return DataMapper.convertToProductDto(products);
      }
 
-    public ProductDto createProduct(ProductRequestDto request) {
+    public ProductDto createProduct(@Valid ProductRequestDto request) {
         Products products=new Products();
         return saveProduct(products,request);
     }
@@ -73,13 +79,13 @@ public class ProductService {
         products.setDescription(request.getDescription());
         products.setSlug(request.getSlug());
         products.setSku(request.getSku());
+
         List<ProductImage>productImages=new ArrayList<>();
         for (String img: request.getImageUrls()){
             ProductImage productImage=new ProductImage();
             productImage.setProducts(products);
             productImage.setImageUrl(img);
             productImages.add(productImage);
-           productImageRepository.save(productImage);
         }
         products.setImages(productImages);
 
@@ -87,17 +93,17 @@ public class ProductService {
         return DataMapper.convertToProductDto(products);
     }
 
-    public ProductDto updateProduct(long id, ProductRequestDto request) {
+    public ProductDto updateProduct(@NotNull long id, @Valid ProductRequestDto request) {
         Products products=fetchProduct(id);
         return saveProduct(products,request);
     }
 
-    public void deleteProduct(long id) {
+    public void deleteProduct(@NotNull long id) {
         Products products=fetchProduct(id);
         productsRepository.delete(products);
     }
 
-    public void addImage(long id,ImageDto image) {
+    public void addImage(@NotNull long id,@Valid ImageDto image) {
         Products products=fetchProduct(id);
         ProductImage productImage=new ProductImage();
         productImage.setProducts(products);

@@ -31,6 +31,8 @@ public class Categories extends Auditable{
     @Column(name = "is_active")
     private boolean isActive=true;
 
+    private String slug;
+
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Categories parentId;

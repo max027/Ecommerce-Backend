@@ -10,6 +10,9 @@ import com.saurabh.E_Commerce.repository.RolesRepository;
 import com.saurabh.E_Commerce.repository.UserRepository;
 import com.saurabh.E_Commerce.security.AuthUtils;
 import io.jsonwebtoken.Claims;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.SimpleMailMessage;
@@ -20,6 +23,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -28,6 +32,7 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Validated
 public class AuthService {
     private final UserRepository userRepository;
     private final RolesRepository rolesRepository;
@@ -40,7 +45,7 @@ public class AuthService {
     private final EmailService emailService;
     private final AddressRepository addressRepository;
 
-    public RegisterResponse signup(CustomerRequest request){
+    public RegisterResponse signup(@Valid CustomerRequest request){
         Users users=userRepository.findByEmail(request.getEmail()).orElse(null);
         if (users!=null){
             throw new ApiError("User already exist", HttpStatus.CONFLICT.value());
@@ -78,17 +83,12 @@ public class AuthService {
         );
     }
     public RegisterResponse signAdmin(RegisterRequest request){
-        Users users=userRepository.findByEmail(request.getEmail()).orElse(null);
-
-        if (users!=null){
-            throw new ApiError("User already exist", HttpStatus.CONFLICT.value());
-        }
-        users=new Users();
-        users.setEmail(request.getEmail());
-        users.setFirstName(request.getFirstName());
-        users.setLastName(request.getLastName());
-        users.setPhone(request.getPhone());
-        users.setPassword(encoder.encode(request.getPassword()));
+        Users users=new Users();
+        users.setEmail("admin@email.com");
+        users.setFirstName("max");
+        users.setLastName("max");
+        users.setPhone("123456789");
+        users.setPassword(encoder.encode("Pass@321"));
 
         Roles userRoles=rolesRepository.findRolesByName("ADMIN").orElseThrow(
                 ()->new ApiError("Default role for user not found",HttpStatus.NOT_FOUND.value())
@@ -96,14 +96,14 @@ public class AuthService {
 
         users.setRoles(Set.of(userRoles));
         userRepository.save(users);
-
         return new RegisterResponse(
                 users.getUserId(),
                 users.getEmail()
         );
+
     }
 
-    public Map<String,String> login(LoginRequest request) {
+    public Map<String,String> login(@Valid LoginRequest request) {
         Authentication authUser=authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
@@ -124,7 +124,7 @@ public class AuthService {
 
         return map;
     }
-    public Map<String,String> refresh(String refreshToken){
+    public Map<String,String> refresh(@NotNull String refreshToken){
         RefreshToken token=refreshTokenService.verify(refreshToken);
         refreshTokenService.revoke(token);
 
@@ -140,12 +140,12 @@ public class AuthService {
 
         return map;
     }
-    public void logout(String token){
+    public void logout(@NotNull String token){
         RefreshToken refreshToken=refreshTokenService.verify(token);
         refreshTokenService.logout(refreshToken);
     }
 
-    public void forgetPassword(String email) {
+    public void forgetPassword(@NotNull String email) {
         Users users=userRepository.findByEmail(email).orElseThrow(
                 ()->new UsernameNotFoundException("user:"+email+" not found")
         );
@@ -161,7 +161,7 @@ public class AuthService {
         String link=frontendUrl+"/reset-password?token="+token;
         emailService.send(email,"password reset","Click to reset-password:"+link);
     }
-    public void resetPassword(ResetPasswordDto resetPasswordDto, String token){
+    public void resetPassword(@Valid ResetPasswordDto resetPasswordDto, @NotNull String token){
         ResetToken resetToken=resetTokenRepository.findByToken(token).orElseThrow(
                 ()->new ApiError("no token found",HttpStatus.FORBIDDEN.value())
         );
@@ -192,7 +192,7 @@ public class AuthService {
         emailService.send(users.getEmail(),"Email Verification","Click to Verify email"+url);
     }
 
-    public void verifyEmail(String token) {
+    public void verifyEmail(@NotNull String token) {
         authUtils.handelEmailVerification(token);
     }
 

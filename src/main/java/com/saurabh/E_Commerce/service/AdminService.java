@@ -12,6 +12,8 @@ import com.saurabh.E_Commerce.repository.PermissionsRepository;
 import com.saurabh.E_Commerce.repository.RolesRepository;
 import com.saurabh.E_Commerce.repository.UserRepository;
 import com.saurabh.E_Commerce.utils.DataMapper;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,12 +23,14 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import java.time.Instant;
 import java.util.*;
 
 @Service
 @RequiredArgsConstructor
+@Validated
 @Transactional
 public class AdminService {
 
@@ -38,11 +42,11 @@ public class AdminService {
     private final PermissionsRepository permissionsRepository;
     private final EmailService emailService;
 
-    public void inviteAdmin(String email){
+    public void inviteAdmin(@NotNull String email){
         createAndSendInvite(email, "ADMIN");
     }
 
-    public void inviteVendor(String email){
+    public void inviteVendor(@NotNull String email){
         createAndSendInvite(email, "VENDOR");
     }
 
@@ -71,7 +75,7 @@ public class AdminService {
         emailService.send(email,"You are invited","Click to join:"+link);
     }
 
-    public void acceptInvite(String token, AcceptInviteRequest request){
+    public void acceptInvite(@NotNull String token, @Valid AcceptInviteRequest request){
         InviteToken inviteToken=inviteTokenRepository.findByToken(token).orElseThrow(
                 ()->new ApiError("Invalid Token",HttpStatus.FORBIDDEN.value())
         );
@@ -113,7 +117,7 @@ public class AdminService {
         return userRepository.findAllVendors(pageable).map(DataMapper::convertToUserDto);
     }
 
-    public void updateAdmin(long id,RegisterRequest request) {
+    public void updateAdmin(@NotNull long id,@Valid RegisterRequest request) {
         Users users=fetchUsers(id);
         users.setUserId(id);
         users.setPhone(request.getPhone());
@@ -124,7 +128,7 @@ public class AdminService {
 
     }
 
-    public void updateVendors(long id, RegisterRequest request) {
+    public void updateVendors(@NotNull long id,@Valid RegisterRequest request) {
         Users users=fetchUsers(id);
 
         users.setUserId(id);
@@ -136,18 +140,18 @@ public class AdminService {
 
     }
 
-    public void deleteStaff(long id) {
+    public void deleteStaff(@NotNull long id) {
         Users users=fetchUsers(id);
         userRepository.delete(users);
     }
 
-    public void suspendVendors(long id) {
+    public void suspendVendors(@NotNull long id) {
         Users users=fetchUsers(id);
         users.setIsEnabled(false);
         userRepository.save(users);
     }
 
-    public void createRoles(RoleRequest request) {
+    public void createRoles(@Valid RoleRequest request) {
         Roles roles=rolesRepository.findRolesByName(request.getName()).orElse(null);
         if (roles!=null){
             throw new ApiError("Roles "+request.getName()+" already exists",HttpStatus.CONFLICT.value());
@@ -170,7 +174,7 @@ public class AdminService {
         rolesRepository.save(roles);
     }
 
-    public void updateRoles(RoleRequest request,long id) {
+    public void updateRoles(@Valid RoleRequest request,long id) {
        Roles roles=rolesRepository.findById(id).orElseThrow();
        roles.setRoleId(id);
        roles.setName(request.getName());
@@ -190,7 +194,7 @@ public class AdminService {
         rolesRepository.save(roles);
     }
 
-    public void deleteRoles(long id) {
+    public void deleteRoles(@NotNull long id) {
         Roles roles=rolesRepository.findById(id).orElseThrow(()->new ApiError("Roles "+id+" not found",HttpStatus.NOT_FOUND.value()));
         rolesRepository.delete(roles);
 
@@ -221,12 +225,12 @@ public class AdminService {
         return DataMapper.convertToUserDto(users);
     }
 
-    public void deleteUsers(long id) {
+    public void deleteUsers(@NotNull long id) {
         Users users=fetchUsers(id);
         userRepository.delete(users);
     }
 
-    public void suspendUsers(long id) {
+    public void suspendUsers(@NotNull long id) {
         Users users=fetchUsers(id);
         users.setIsEnabled(false);
         userRepository.save(users);

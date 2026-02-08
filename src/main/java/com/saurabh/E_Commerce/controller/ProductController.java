@@ -42,7 +42,7 @@ public class ProductController {
     }
 
     @GetMapping("/slug/{slug}")
-    public ResponseEntity<ProductDto>getAllReviews(@PathVariable String slug){
+    public ResponseEntity<ProductDto>getBySlug(@PathVariable String slug){
         return ResponseEntity.ok(productService.getBySlug(slug));
     }
 
@@ -73,8 +73,8 @@ public class ProductController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/{id}/images/{imageId}")
-    public ResponseEntity<?>addImage(@PathVariable long id,@PathVariable long imageId){
+    @DeleteMapping("/{id}/images/{imageId}")
+    public ResponseEntity<?>deleteImage(@PathVariable long id,@PathVariable long imageId){
         productService.removeImage(id,imageId);
         return ResponseEntity.ok("image removed");
     }
