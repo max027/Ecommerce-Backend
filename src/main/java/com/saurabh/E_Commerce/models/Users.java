@@ -46,18 +46,18 @@ public class Users extends Auditable implements UserDetails {
     @Column(name = "last_login")
     private Instant lastLogin;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER,cascade = {CascadeType.PERSIST,CascadeType.MERGE})
     @JoinTable(
             name = "user_roles",
-            joinColumns = @JoinColumn(name = "role_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Set<Roles> roles;
+    private Set<Roles> roles=new HashSet<>();
 
     private boolean isEnabled=true;
 
-    @OneToMany(cascade = CascadeType.REMOVE,orphanRemoval = true,fetch = FetchType.EAGER,mappedBy = "users")
-    private Set<Address> addresses;
+    @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER,mappedBy = "users")
+    private Set<Address> addresses=new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

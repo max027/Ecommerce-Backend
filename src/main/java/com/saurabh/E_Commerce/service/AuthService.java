@@ -57,12 +57,12 @@ public class AuthService {
         users.setPhone(request.getPhone());
         users.setPassword(encoder.encode(request.getPassword()));
 
+        userRepository.saveAndFlush(users);
         Roles userRoles=rolesRepository.findRolesByName("CUSTOMER").orElseThrow(
                 ()->new ApiError("Default role for user not found",HttpStatus.NOT_FOUND.value())
         );
 
-        users.setRoles(Set.of(userRoles));
-        userRepository.save(users);
+        users.getRoles().add(userRoles);
 
         Address address=new Address();
         address.setState(request.getAddress().getState());
@@ -71,11 +71,10 @@ public class AuthService {
         address.setAddressLine2(request.getAddress().getAddressLine2());
         address.setAddressLine1(request.getAddress().getAddressLine1());
         address.setPostalCode(request.getAddress().getPostalCode());
-        address.setUsers(users);
         address.setCountry(request.getAddress().getCountry());
-        addressRepository.save(address);
 
-        users.setAddresses(Set.of(address));
+        address.setUsers(users);
+        users.getAddresses().add(address);
 
         return new RegisterResponse(
                 users.getUserId(),
