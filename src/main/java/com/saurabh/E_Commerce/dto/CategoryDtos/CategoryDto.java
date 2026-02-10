@@ -1,11 +1,7 @@
-package com.saurabh.E_Commerce.dto;
+package com.saurabh.E_Commerce.dto.CategoryDtos;
 
-import com.saurabh.E_Commerce.models.Categories;
-import com.saurabh.E_Commerce.models.Products;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-
-import java.util.List;
 
 @Setter
 @Getter

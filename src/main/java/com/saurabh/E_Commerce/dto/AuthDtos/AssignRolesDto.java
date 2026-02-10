@@ -1,4 +1,4 @@
-package com.saurabh.E_Commerce.dto;
+package com.saurabh.E_Commerce.dto.AuthDtos;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ImageDto {
+public class AssignRolesDto {
     @NotNull
-    private String url;
+   private Long[] rolesId;
 }

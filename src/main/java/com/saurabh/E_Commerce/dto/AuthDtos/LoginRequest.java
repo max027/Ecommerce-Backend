@@ -1,4 +1,4 @@
-package com.saurabh.E_Commerce.dto;
+package com.saurabh.E_Commerce.dto.AuthDtos;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

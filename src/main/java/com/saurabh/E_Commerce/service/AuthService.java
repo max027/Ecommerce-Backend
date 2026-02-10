@@ -1,21 +1,18 @@
 package com.saurabh.E_Commerce.service;
 
-import com.saurabh.E_Commerce.dto.*;
+import com.saurabh.E_Commerce.dto.AuthDtos.*;
+import com.saurabh.E_Commerce.dto.CustomerDtos.CustomerRequest;
 import com.saurabh.E_Commerce.exception.ApiError;
 import com.saurabh.E_Commerce.models.*;
-import com.saurabh.E_Commerce.models.enums.RolesEnum;
 import com.saurabh.E_Commerce.repository.AddressRepository;
 import com.saurabh.E_Commerce.repository.ResetTokenRepository;
 import com.saurabh.E_Commerce.repository.RolesRepository;
 import com.saurabh.E_Commerce.repository.UserRepository;
 import com.saurabh.E_Commerce.security.AuthUtils;
-import io.jsonwebtoken.Claims;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
-import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 

@@ -1,8 +1,8 @@
 package com.saurabh.E_Commerce.service;
 
-import com.saurabh.E_Commerce.dto.CategoryDto;
-import com.saurabh.E_Commerce.dto.CategoryRequestDto;
-import com.saurabh.E_Commerce.dto.ProductDto;
+import com.saurabh.E_Commerce.dto.CategoryDtos.CategoryDto;
+import com.saurabh.E_Commerce.dto.CartDtos.CategoryRequestDto;
+import com.saurabh.E_Commerce.dto.ProductDtos.ProductDto;
 import com.saurabh.E_Commerce.exception.ApiError;
 import com.saurabh.E_Commerce.models.Categories;
 import com.saurabh.E_Commerce.models.Products;
@@ -11,13 +11,11 @@ import com.saurabh.E_Commerce.utils.DataMapper;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service

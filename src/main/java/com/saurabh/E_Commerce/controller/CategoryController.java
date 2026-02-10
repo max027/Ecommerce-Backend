@@ -1,19 +1,14 @@
 package com.saurabh.E_Commerce.controller;
 
-import com.saurabh.E_Commerce.dto.CategoryDto;
-import com.saurabh.E_Commerce.dto.CategoryRequestDto;
-import com.saurabh.E_Commerce.dto.ProductDto;
-import com.saurabh.E_Commerce.models.Categories;
-import com.saurabh.E_Commerce.models.Products;
+import com.saurabh.E_Commerce.dto.CategoryDtos.CategoryDto;
+import com.saurabh.E_Commerce.dto.CartDtos.CategoryRequestDto;
+import com.saurabh.E_Commerce.dto.ProductDtos.ProductDto;
 import com.saurabh.E_Commerce.service.CategoryService;
-import jakarta.persistence.*;
 import jakarta.validation.Valid;
-import lombok.Generated;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

@@ -1,16 +1,16 @@
-package com.saurabh.E_Commerce.dto;
+package com.saurabh.E_Commerce.dto.CustomerDtos;
 
+import com.saurabh.E_Commerce.dto.AddressDto;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import lombok.Getter;
+import lombok.Setter;
 
-import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.Range;
-
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class RegisterRequest {
+@Getter
+@Setter
+public class CustomerRequest {
     @Email(regexp = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}",
             flags = Pattern.Flag.CASE_INSENSITIVE,
             message = "Email is not valid")
@@ -31,4 +31,9 @@ public class RegisterRequest {
             message = "Password must be 8-20 characters long and include at least one digit, one lowercase letter, one uppercase letter, and one special character (!@#$%^&+=.,?)"
     )
     private String password;
+
+    private AddressDto address;
+
+
+
 }

@@ -1,6 +1,6 @@
 package com.saurabh.E_Commerce.service;
 
-import com.saurabh.E_Commerce.dto.*;
+import com.saurabh.E_Commerce.dto.AuthDtos.*;
 import com.saurabh.E_Commerce.exception.ApiError;
 import com.saurabh.E_Commerce.models.InviteToken;
 import com.saurabh.E_Commerce.models.Permissions;

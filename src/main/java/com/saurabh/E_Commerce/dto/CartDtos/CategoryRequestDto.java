@@ -1,4 +1,4 @@
-package com.saurabh.E_Commerce.dto;
+package com.saurabh.E_Commerce.dto.CartDtos;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;

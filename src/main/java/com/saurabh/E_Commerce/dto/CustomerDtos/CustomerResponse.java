@@ -1,5 +1,6 @@
-package com.saurabh.E_Commerce.dto;
+package com.saurabh.E_Commerce.dto.CustomerDtos;
 
+import com.saurabh.E_Commerce.dto.AddressDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

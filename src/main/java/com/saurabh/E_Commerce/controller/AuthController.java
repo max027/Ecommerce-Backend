@@ -1,12 +1,12 @@
 package com.saurabh.E_Commerce.controller;
 
-import com.saurabh.E_Commerce.dto.*;
+import com.saurabh.E_Commerce.dto.AuthDtos.*;
+import com.saurabh.E_Commerce.dto.CustomerDtos.CustomerRequest;
 import com.saurabh.E_Commerce.exception.ApiError;
 import com.saurabh.E_Commerce.service.AuthService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

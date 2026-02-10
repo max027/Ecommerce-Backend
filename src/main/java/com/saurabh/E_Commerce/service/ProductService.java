@@ -1,6 +1,9 @@
 package com.saurabh.E_Commerce.service;
 
 import com.saurabh.E_Commerce.dto.*;
+import com.saurabh.E_Commerce.dto.ProductDtos.ImageDto;
+import com.saurabh.E_Commerce.dto.ProductDtos.ProductDto;
+import com.saurabh.E_Commerce.dto.ProductDtos.ProductRequestDto;
 import com.saurabh.E_Commerce.exception.ApiError;
 import com.saurabh.E_Commerce.models.Categories;
 import com.saurabh.E_Commerce.models.ProductImage;
@@ -16,14 +19,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -40,7 +41,7 @@ public class ProductService {
         );
     }
 
-    public Page<ProductDto> getAllProduct(int page,int limit,int minPrice,int maxPrice) {
+    public Page<ProductDto> getAllProduct(int page, int limit, int minPrice, int maxPrice) {
         Pageable pageable= PageRequest.of(page,limit);
         return productsRepository.findAllRange(pageable,minPrice,maxPrice).map(DataMapper::convertToProductDto);
     }

@@ -1,4 +1,4 @@
-package com.saurabh.E_Commerce.dto;
+package com.saurabh.E_Commerce.dto.AuthDtos;
 
 import lombok.Builder;
 import lombok.Getter;

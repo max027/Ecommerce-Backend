@@ -1,10 +1,7 @@
-package com.saurabh.E_Commerce.dto;
+package com.saurabh.E_Commerce.dto.ProductDtos;
 
-import com.saurabh.E_Commerce.models.Categories;
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import jdk.jfr.StackTrace;
 import lombok.Getter;
 import lombok.Setter;
 

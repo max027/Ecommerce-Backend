@@ -59,6 +59,10 @@ public class Users extends Auditable implements UserDetails {
     @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER,mappedBy = "users")
     private Set<Address> addresses=new HashSet<>();
 
+
+    @OneToOne(mappedBy = "users")
+    private Cart cart;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<GrantedAuthority>authorities=new HashSet<>();

@@ -1,8 +1,8 @@
 package com.saurabh.E_Commerce.controller;
 
 import com.saurabh.E_Commerce.dto.AddressDto;
-import com.saurabh.E_Commerce.dto.CustomerResponse;
-import com.saurabh.E_Commerce.dto.UserDto;
+import com.saurabh.E_Commerce.dto.CustomerDtos.CustomerResponse;
+import com.saurabh.E_Commerce.dto.AuthDtos.UserDto;
 import com.saurabh.E_Commerce.service.CustomerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

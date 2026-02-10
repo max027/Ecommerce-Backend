@@ -1,5 +1,4 @@
-package com.saurabh.E_Commerce.dto;
-import com.saurabh.E_Commerce.models.Categories;
+package com.saurabh.E_Commerce.dto.ProductDtos;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

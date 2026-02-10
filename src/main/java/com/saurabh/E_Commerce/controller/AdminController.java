@@ -1,17 +1,11 @@
 package com.saurabh.E_Commerce.controller;
 
-import com.saurabh.E_Commerce.dto.*;
-import com.saurabh.E_Commerce.models.Permissions;
-import com.saurabh.E_Commerce.models.Users;
+import com.saurabh.E_Commerce.dto.AuthDtos.*;
 import com.saurabh.E_Commerce.service.AdminService;
 import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.web.PagedModel;
-import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.data.web.PagedResourcesAssemblerArgumentResolver;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;

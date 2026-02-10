@@ -10,6 +10,9 @@ import org.hibernate.annotations.DialectOverride;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "cart")
 @Getter
@@ -20,20 +23,13 @@ public class Cart extends Auditable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private long cartItemsId;
+    private long id;
 
-    @ManyToOne
-    @JoinColumn(name = "cart_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private Cart cartId;
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private Users users;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Products products;
-
-    private int quantity=1;
-
-    private double price;
-
+    @OneToMany(mappedBy = "cart",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER)
+    private List<CartItems>items=new ArrayList<>();
 
 }

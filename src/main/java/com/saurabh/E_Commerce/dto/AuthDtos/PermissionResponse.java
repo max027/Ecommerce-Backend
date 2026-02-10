@@ -1,4 +1,4 @@
-package com.saurabh.E_Commerce.dto;
+package com.saurabh.E_Commerce.dto.AuthDtos;
 
 import com.saurabh.E_Commerce.models.enums.ModuleEnum;
 import lombok.Builder;
