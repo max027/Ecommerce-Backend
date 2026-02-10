@@ -1,5 +1,6 @@
 package com.saurabh.E_Commerce.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -7,24 +8,24 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AddressDto {
-    @NotNull
+    @NotBlank(message = "address type is required")
     private String addressType;
 
-    @NotNull
+    @NotBlank(message = "address line is required")
     private String addressLine1;
 
-    @NotNull
+    @NotBlank(message = "address line is required")
     private String addressLine2;
 
-    @NotNull
+    @NotBlank(message = " city is required")
     private String city;
 
-    @NotNull
+    @NotBlank(message = "state is required")
     private String state;
 
-    @NotNull
+    @NotBlank(message = "postal code is required")
     private String postalCode;
 
-    @NotNull
+    @NotBlank(message = "country name is required")
     private String country;
 }

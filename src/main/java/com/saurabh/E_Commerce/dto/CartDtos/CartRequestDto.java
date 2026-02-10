@@ -7,8 +7,8 @@ import lombok.Setter;
 @Setter
 @Getter
 public class CartRequestDto {
-    @NotNull
+    @NotNull(message = "product id is required")
     private Long productId;
-    @NotNull
+    @NotNull(message = "quantity is required")
     private int quantity;
 }

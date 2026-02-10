@@ -4,6 +4,7 @@ import com.saurabh.E_Commerce.dto.*;
 import com.saurabh.E_Commerce.dto.AuthDtos.UserDto;
 import com.saurabh.E_Commerce.dto.CartDtos.CartItemsDto;
 import com.saurabh.E_Commerce.dto.CategoryDtos.CategoryDto;
+import com.saurabh.E_Commerce.dto.Coupon.CouponsResponseDto;
 import com.saurabh.E_Commerce.dto.ProductDtos.ProductDto;
 import com.saurabh.E_Commerce.models.*;
 
@@ -58,6 +59,22 @@ public class DataMapper {
         dto.setProductsId(items.getProducts().getProductId());
         dto.setProductsName(items.getProducts().getName());
         return dto;
+    }
+    public static CouponsResponseDto convertToCoupon(Coupons coupons){
+        return CouponsResponseDto.builder()
+                .couponsId(coupons.getCouponsId())
+                .code(coupons.getCode())
+                .description(coupons.getDescription())
+                .usageCoupon(coupons.getUsageCoupon())
+                .usageLimit(coupons.getUsageLimit())
+                .discountType(coupons.getDiscountType())
+                .discountValue(coupons.getDiscountValue())
+                .minOrderValue(coupons.getMinOrderValue())
+                .maxDiscountValue(coupons.getMaxDiscountValue())
+                .validFrom(coupons.getValidFrom())
+                .validUntil(coupons.getValidUntil())
+                .isActive(coupons.isActive())
+                .build();
     }
     private DataMapper(){
 

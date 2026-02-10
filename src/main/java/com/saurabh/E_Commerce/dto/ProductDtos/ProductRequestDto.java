@@ -1,6 +1,7 @@
 package com.saurabh.E_Commerce.dto.ProductDtos;
 
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,13 +11,13 @@ import java.util.List;
 @Getter
 @Setter
 public class ProductRequestDto {
-    @NotNull
+    @NotBlank(message = "product name is required")
     private String name;
 
-    @NotNull
+    @NotBlank(message = "product sky name is required")
     private String sku;
 
-    @NotNull
+    @NotBlank(message = "product slug is required")
     private String slug;
 
     private String description;
@@ -25,6 +26,7 @@ public class ProductRequestDto {
     private long categoryId;
 
     @NotNull
+    @Min(value = 0)
     private double price;
 
     private double discountPrice;

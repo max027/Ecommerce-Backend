@@ -1,6 +1,7 @@
 package com.saurabh.E_Commerce.dto.AuthDtos;
 
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RoleRequest{
-    @NotNull(message = "name is required")
+    @NotBlank(message = "name is required")
     private String name;
 
     private String description;

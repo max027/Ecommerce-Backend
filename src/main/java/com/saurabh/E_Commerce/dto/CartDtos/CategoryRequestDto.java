@@ -1,5 +1,6 @@
 package com.saurabh.E_Commerce.dto.CartDtos;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,14 +9,14 @@ import lombok.Setter;
 @Getter
 public class CategoryRequestDto {
 
-    @NotNull
+    @NotBlank(message = "name is required")
     private String name;
 
     private String description;
 
     private long parentId;
 
-    @NotNull
+    @NotBlank(message = "slug is required")
     private String slug;
 
     @NotNull

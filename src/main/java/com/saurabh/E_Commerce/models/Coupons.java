@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.Instant;
 import java.util.Date;
 
 @Entity
@@ -25,11 +26,11 @@ public class Coupons extends Auditable{
 
     private String description;
 
-    @Column(nullable = false)
-    private String discount_type;
+    @Column(name = "discount_type", nullable = false)
+    private String discountType;
 
-    @Column(nullable = false)
-    private double discount_value;
+    @Column(name = "discount_value", nullable = false)
+    private double discountValue;
 
     @Column(name = "min_order_value", nullable = false)
     private double minOrderValue;
@@ -47,8 +48,12 @@ public class Coupons extends Auditable{
     private boolean isActive=true;
 
     @Column(name = "valid_from",nullable = false)
-    private Date validFrom;
+    private Instant validFrom;
 
     @Column(name = "valid_until",nullable = false)
-    private Date validUntil;
+    private Instant validUntil;
+
+    public void setIsActive(boolean b) {
+        this.isActive=b;
+    }
 }
