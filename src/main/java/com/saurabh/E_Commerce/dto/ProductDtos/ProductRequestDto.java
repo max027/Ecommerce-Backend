@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Getter
@@ -26,8 +27,7 @@ public class ProductRequestDto {
     private long categoryId;
 
     @NotNull
-    @Min(value = 0)
-    private double price;
+    private BigDecimal price;
 
     private double discountPrice;
 

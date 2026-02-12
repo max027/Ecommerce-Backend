@@ -10,6 +10,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.CreatedDate;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 
 @Entity
@@ -40,11 +41,11 @@ public class OrderItems {
 
     private int quantity;
 
-    @Column(name = "unit_price", nullable = false)
-    private double unitPrice;
+    @Column(name = "unit_price", nullable = false,precision = 15,scale = 2)
+    private BigDecimal unitPrice;
 
-    @Column(name = "total_price", nullable = false)
-    private double totalPrice;
+    @Column(name = "total_price", nullable = false,precision = 15,scale = 2)
+    private BigDecimal totalPrice;
 
     @CreatedDate
     @Column(name = "created_at")

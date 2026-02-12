@@ -3,6 +3,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 
 @Getter
 @Setter
@@ -13,5 +15,5 @@ public class ProductDto {
     private String sku;
     private String description;
     private String categoryName;
-    private double price;
+    private BigDecimal price;
 }

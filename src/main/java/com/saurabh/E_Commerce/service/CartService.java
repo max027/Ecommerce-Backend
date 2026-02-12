@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -53,12 +54,13 @@ public class CartService {
         cartDto.setUsersId(users.getUserId());
 
         List<CartItemsDto>list=new ArrayList<>();
-        double totalAmount=0.0d;
+        BigDecimal totalAmount=BigDecimal.ZERO;
 
         for (CartItems cartItems:items){
             CartItemsDto dto= DataMapper.convertToCartItemsDto(cartItems);
-            double quantity=Double.parseDouble(String.valueOf(cartItems.getQuantity()));
-            totalAmount+=quantity*cartItems.getPrice();
+            BigDecimal quantity=BigDecimal.valueOf(cartItems.getQuantity());
+
+            totalAmount=quantity.multiply(cartItems.getPrice());
             list.add(dto);
         }
 

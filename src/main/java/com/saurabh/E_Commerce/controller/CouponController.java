@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/coupon")
 public class CouponController {
@@ -41,7 +41,7 @@ public class CouponController {
         return ResponseEntity.ok(couponService.getById(id));
     }
 
-    @PostMapping("/")
+    @PostMapping("/create")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> createCoupon(@RequestBody CouponRequestDto request){
         couponService.createCoupon(request);

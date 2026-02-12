@@ -45,7 +45,7 @@ public class InventoryTransaction extends Auditable{
     private ReferenceType referenceType;
 
     @Column(name = "reference_id")
-    private String referenceId;
+    private long referenceId;
 
     private  String notes;
 

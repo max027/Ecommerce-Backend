@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('CUSTOMER')")
 @RequestMapping("/api/users")

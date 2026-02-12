@@ -1,12 +1,19 @@
 package com.saurabh.E_Commerce.utils;
 
-import com.saurabh.E_Commerce.dto.*;
+import com.saurabh.E_Commerce.dto.AddressDto;
 import com.saurabh.E_Commerce.dto.AuthDtos.UserDto;
 import com.saurabh.E_Commerce.dto.CartDtos.CartItemsDto;
 import com.saurabh.E_Commerce.dto.CategoryDtos.CategoryDto;
 import com.saurabh.E_Commerce.dto.Coupon.CouponsResponseDto;
+import com.saurabh.E_Commerce.dto.OrdersDto.OrderItemsResponseDto;
+import com.saurabh.E_Commerce.dto.OrdersDto.OrderResponseDto;
+import com.saurabh.E_Commerce.dto.OrdersDto.OrderTimeLineDto;
 import com.saurabh.E_Commerce.dto.ProductDtos.ProductDto;
+import com.saurabh.E_Commerce.dto.ReviewsDto;
 import com.saurabh.E_Commerce.models.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DataMapper {
     public static UserDto convertToUserDto(Users users){
@@ -76,6 +83,53 @@ public class DataMapper {
                 .isActive(coupons.isActive())
                 .build();
     }
+    public static AddressDto convertToAddressResponse(Address address){
+        AddressDto addressDto=new AddressDto();
+        addressDto.setAddressType(address.getAddressType());
+        addressDto.setAddressLine1(address.getAddressLine1());
+        addressDto.setAddressLine2(address.getAddressLine2());
+        addressDto.setState(address.getState());
+        addressDto.setCity(address.getCity());
+        addressDto.setCountry(address.getCountry());
+        addressDto.setPostalCode(address.getPostalCode());
+        return addressDto;
+    }
+    public static OrderResponseDto convertToOrderResponse(Orders orders){
+        OrderResponseDto dto=new OrderResponseDto();
+        List<OrderItemsResponseDto>oidto=new ArrayList<>();
+        dto.setOrdersId(orders.getOrdersId());
+        dto.setOrderNumber(orders.getOrderNumber());
+        dto.setBillingAddress(convertToAddressResponse(orders.getBillingAddress()));
+        dto.setShippingAddress(convertToAddressResponse(orders.getShippingAddress()));
+        dto.setStatus(orders.getStatus());
+        dto.setSubtotal(orders.getSubtotal());
+        dto.setDiscountAmount(orders.getDiscountAmount());
+        dto.setTaxAmount(orders.getTaxAmount());
+        dto.setTotalAmount(orders.getTotalAmount());
+        dto.setShippingAmount(orders.getShippingAmount());
+
+        for(OrderItems items:orders.getOrderItems()){
+            OrderItemsResponseDto dto1=new OrderItemsResponseDto();
+            dto1.setOrderItemsId(items.getOrderItemsId());
+            dto1.setQuantity(items.getQuantity());
+            dto1.setProductName(items.getProductName());
+            dto1.setUnitPrice(items.getUnitPrice());
+            dto1.setTotalPrice(items.getTotalPrice());
+            oidto.add(dto1);
+        }
+        dto.setOrderItems(oidto);
+        return dto;
+    }
+
+    public static OrderTimeLineDto convertToOrderTimeline(OrderStatusHistory history){
+        OrderTimeLineDto dto=new OrderTimeLineDto();
+        dto.setNote(history.getNote());
+        dto.setOrderStatusHistoryId(history.getOrderStatusHistoryId());
+        dto.setStatus(history.getStatus());
+        dto.setOrdersId(history.getOrders().getOrdersId());
+        return dto;
+    }
+
     private DataMapper(){
 
     }

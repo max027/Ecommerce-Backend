@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
@@ -37,7 +38,7 @@ public class Products extends Auditable{
     @JoinColumn(name = "category_id")
     private Categories categories;
 
-    private double price;
+    private BigDecimal price;
 
     @Column(name = "discount_price")
     private double discountPrice;
