@@ -128,3 +128,23 @@
 | DELETE | /coupons/:id        |
 | PUT    | /coupons/:id/toggle | 
 
+##  Order Routes (`/orders`)
+
+### Protected Routes (Customer)
+
+| Method | Endpoint            | 
+|--------|---------------------|
+| POST   | /orders             |
+| GET    | /orders             | 
+| GET    | /orders/:id         | 
+| PUT    | / orders/:id/cancel | 
+| POST   | /orders/:id/review  | 
+
+### Admin Routes
+
+| Method | Endpoint             | 
+|--------|----------------------|
+| GET    | /orders/all          | 
+| PUT    | /orders/:id/status   | 
+| GET    | /orders/:id/timeline | 
+

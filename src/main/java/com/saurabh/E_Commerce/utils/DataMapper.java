@@ -9,7 +9,7 @@ import com.saurabh.E_Commerce.dto.OrdersDto.OrderItemsResponseDto;
 import com.saurabh.E_Commerce.dto.OrdersDto.OrderResponseDto;
 import com.saurabh.E_Commerce.dto.OrdersDto.OrderTimeLineDto;
 import com.saurabh.E_Commerce.dto.ProductDtos.ProductDto;
-import com.saurabh.E_Commerce.dto.ReviewsDto;
+import com.saurabh.E_Commerce.dto.ReviewDto.ReviewsDto;
 import com.saurabh.E_Commerce.models.*;
 
 import java.util.ArrayList;
