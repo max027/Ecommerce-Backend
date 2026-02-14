@@ -34,7 +34,7 @@ public class Categories extends Auditable{
     private String slug;
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "parent_id")
     private Categories parentId;
 
     @OneToMany(mappedBy = "categories",fetch=FetchType.LAZY,cascade = {CascadeType.MERGE,CascadeType.PERSIST})

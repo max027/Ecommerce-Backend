@@ -56,7 +56,7 @@ public class Users extends Auditable implements UserDetails {
 
     private boolean isEnabled=true;
 
-    @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.LAZY,mappedBy = "users")
+    @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER,mappedBy = "users")
     private Set<Address> addresses=new HashSet<>();
 
 
