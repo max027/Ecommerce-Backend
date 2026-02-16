@@ -28,6 +28,7 @@ public class DataMapper {
     public static ProductDto convertToProductDto(Products products){
         return ProductDto.builder()
                 .id(products.getProductId())
+                .vendorId(products.getVendors().getUserId())
                 .name(products.getName())
                 .description(products.getDescription())
                 .categoryName(products.getCategories().getName())

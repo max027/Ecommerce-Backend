@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 @Builder
 public class ProductDto {
     private long id;
+    private long vendorId;
     private String name;
     private String sku;
     private String description;

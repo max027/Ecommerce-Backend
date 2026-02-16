@@ -50,6 +50,12 @@ public class AdminController {
        adminService.acceptInvite(token,request);
        return ResponseEntity.ok("Invite accepted");
     }
+    @PermitAll
+    @PostMapping("/vendors/accept-invite")
+    public ResponseEntity<?>VendorAcceptInvite(@RequestParam String token, @Valid @RequestBody VendorAcceptInviteDto request){
+        adminService.vendorAcceptInvite(token,request);
+        return ResponseEntity.ok("Invite accepted");
+    }
 
     @PutMapping("/{id}")
     public ResponseEntity<?>updateAdmin(@PathVariable long id, @Valid @RequestBody RegisterRequest request){

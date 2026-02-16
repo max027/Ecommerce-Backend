@@ -49,6 +49,10 @@ public class Products extends Auditable{
     @Column(name = "is_active")
     private boolean isActive=true;
 
+    @ManyToOne
+    @JoinColumn(name = "vendor_id")
+    private Users vendors;
+
     @OneToMany(mappedBy = "products",fetch = FetchType.EAGER,cascade =CascadeType.ALL)
     private List<ProductImage> images;
 

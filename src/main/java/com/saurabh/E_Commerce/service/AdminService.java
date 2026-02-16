@@ -2,15 +2,9 @@ package com.saurabh.E_Commerce.service;
 
 import com.saurabh.E_Commerce.dto.AuthDtos.*;
 import com.saurabh.E_Commerce.exception.ApiError;
-import com.saurabh.E_Commerce.models.InviteToken;
-import com.saurabh.E_Commerce.models.Permissions;
-import com.saurabh.E_Commerce.models.Roles;
-import com.saurabh.E_Commerce.models.Users;
+import com.saurabh.E_Commerce.models.*;
 import com.saurabh.E_Commerce.models.enums.ModuleEnum;
-import com.saurabh.E_Commerce.repository.InviteTokenRepository;
-import com.saurabh.E_Commerce.repository.PermissionsRepository;
-import com.saurabh.E_Commerce.repository.RolesRepository;
-import com.saurabh.E_Commerce.repository.UserRepository;
+import com.saurabh.E_Commerce.repository.*;
 import com.saurabh.E_Commerce.utils.DataMapper;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -37,6 +31,7 @@ public class AdminService {
     private final String frontendUrl="http://localhost:8080/api";
     private final InviteTokenRepository inviteTokenRepository;
     private final UserRepository userRepository;
+    private final VendorsRepository vendorsRepository;
     private final PasswordEncoder encoder;
     private final RolesRepository rolesRepository;
     private final PermissionsRepository permissionsRepository;
@@ -71,7 +66,12 @@ public class AdminService {
         inviteTokenRepository.save(inviteToken);
         //send email
 
-        String link=frontendUrl+"/accept-invite?token="+token;
+        String link=null;
+        if (rolesEnum.equals("ADMIN")){
+            link=frontendUrl+"/accept-invite?token="+token;
+        }else{
+            link=frontendUrl+"/vendors/accept-invite?token="+token;
+        }
         emailService.send(email,"You are invited","Click to join:"+link);
     }
 
@@ -99,6 +99,39 @@ public class AdminService {
         userRepository.save(users);
         inviteTokenRepository.delete(inviteToken);
     }
+    public void vendorAcceptInvite(String token, @Valid VendorAcceptInviteDto request) {
+        InviteToken inviteToken=inviteTokenRepository.findByToken(token).orElseThrow(
+                ()->new ApiError("Invalid Token",HttpStatus.FORBIDDEN.value())
+        );
+
+        if (inviteToken.getExpiresAt().isBefore(Instant.now())){
+            throw new ApiError("Invite expires",HttpStatus.UNAUTHORIZED.value());
+        }
+
+        Users users=new Users();
+        users.setEmail(inviteToken.getEmail());
+        users.setPassword(encoder.encode(request.getPassword()));
+        //fetch role
+        Roles roles=rolesRepository.findRolesByName(inviteToken.getRoles()).orElseThrow(
+                ()->new ApiError("Given role not found",HttpStatus.NOT_FOUND.value())
+        );
+        users.setRoles(Set.of(roles));
+        users.setFirstName(request.getFirstName());
+        users.setLastName(request.getLastName());
+        users.setPhone(request.getPhone());
+
+        userRepository.save(users);
+
+        Vendors vendors=new Vendors();
+        vendors.setGstNumber(request.getGstNumber());
+        vendors.setUsers(users);
+        vendors.setBusinessEmail(users.getEmail());
+        vendors.setApproved(true);
+        vendors.setBusinessName(request.getBusinessName());
+        vendorsRepository.save(vendors);
+        inviteTokenRepository.delete(inviteToken);
+    }
+
 
     public List<UserDto> getAllAdmin() {
         List<Users>admins=userRepository.findAllAdmins();
