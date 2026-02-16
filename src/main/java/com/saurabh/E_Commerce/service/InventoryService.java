@@ -52,9 +52,6 @@ public class InventoryService {
         InventoryTransaction transaction=new InventoryTransaction();
         transaction.setQuantityBefore(products.getStockQuantity());
 
-        products.setStockQuantity(products.getStockQuantity()+ request.getQuantityChange());
-        productsRepository.save(products);
-
         String type=request.getType().trim().toUpperCase();
         TransactionType transactionType=null;
         ReferenceType referenceType = null;
@@ -62,17 +59,26 @@ public class InventoryService {
             case "RESTOCK" -> {
                 referenceType=ReferenceType.RESTOCK;
                 transactionType=TransactionType.IN;
+                products.setStockQuantity(products.getStockQuantity()+ request.getQuantityChange());
             }
             case "RETURN" -> {
                 referenceType=ReferenceType.RETURN;
                 transactionType=TransactionType.IN;
+                products.setStockQuantity(products.getStockQuantity()+ request.getQuantityChange());
             }
             case "MANUAL" -> {
                 referenceType=ReferenceType.MANUAL;
                 transactionType=TransactionType.ADJUSTMENT;
+                int diff=products.getStockQuantity()-request.getQuantityChange();
+                if (diff<=0){
+                    throw new IllegalArgumentException("invalid quantity:"+request.getQuantityChange()+" quantity cannot be higher than inventory stock");
+                }else{
+                    products.setStockQuantity(products.getStockQuantity()-request.getQuantityChange());
+                }
             }
             default -> throw new IllegalArgumentException("invalid reference type:" + type);
         };
+        productsRepository.save(products);
 
         transaction.setQuantityChange(request.getQuantityChange());
         transaction.setQuantityAfter(products.getStockQuantity());
@@ -85,6 +91,6 @@ public class InventoryService {
 
     public Page<TransactionDto> getTransaction(int page, int limit) {
         Pageable pageable= PageRequest.of(page,limit);
-       return inventoryTransactionRepository.findAll(pageable).map(DataMapper::convertToTransactionDto);
+        return inventoryTransactionRepository.findAll(pageable).map(DataMapper::convertToTransactionDto);
     }
 }
