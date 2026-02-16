@@ -37,4 +37,6 @@ public class ProductRequestDto {
 
     @NotNull
     private List<String> imageUrls;
+
+    private long vendorId;
 }

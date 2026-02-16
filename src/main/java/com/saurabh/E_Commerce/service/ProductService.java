@@ -9,9 +9,11 @@ import com.saurabh.E_Commerce.exception.ApiError;
 import com.saurabh.E_Commerce.models.Categories;
 import com.saurabh.E_Commerce.models.ProductImage;
 import com.saurabh.E_Commerce.models.Products;
+import com.saurabh.E_Commerce.models.Vendors;
 import com.saurabh.E_Commerce.repository.CategoriesRepository;
 import com.saurabh.E_Commerce.repository.ProductImageRepository;
 import com.saurabh.E_Commerce.repository.ProductsRepository;
+import com.saurabh.E_Commerce.repository.VendorsRepository;
 import com.saurabh.E_Commerce.utils.DataMapper;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -35,6 +37,7 @@ public class ProductService {
     private final ProductsRepository productsRepository;
     private final CategoriesRepository categoriesRepository;
     private final ProductImageRepository productImageRepository;
+    private final VendorsRepository vendorsRepository;
 
     private Products fetchProduct(@NotNull long id){
         return productsRepository.findById(id).orElseThrow(
@@ -81,6 +84,9 @@ public class ProductService {
         products.setDescription(request.getDescription());
         products.setSlug(request.getSlug());
         products.setSku(request.getSku());
+
+        Vendors vendors=vendorsRepository.findByUsersUserId(request.getVendorId()).orElseThrow();
+        products.setVendors(vendors);
 
         List<ProductImage>productImages=new ArrayList<>();
         for (String img: request.getImageUrls()){

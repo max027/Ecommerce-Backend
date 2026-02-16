@@ -2,6 +2,7 @@ package com.saurabh.E_Commerce.repository;
 
 import com.saurabh.E_Commerce.models.Products;
 import com.saurabh.E_Commerce.models.Review;
+import com.saurabh.E_Commerce.models.Users;
 import org.springframework.boot.data.autoconfigure.web.DataWebProperties;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,4 +27,6 @@ public interface ProductsRepository extends JpaRepository<Products, Long> {
     Page<Review> findAllReviews(Pageable pageable);
 
     Optional<Products> findBySlug(String slug);
+
+    Page<Products> findByVendorsUsers(Users vendorsUsers, Pageable pageable);
 }

@@ -43,4 +43,6 @@ public class Vendors {
     @JoinColumn(name = "user_id")
     private Users users;
 
+    @OneToMany(mappedBy = "productId")
+    private List<Products> products;
 }

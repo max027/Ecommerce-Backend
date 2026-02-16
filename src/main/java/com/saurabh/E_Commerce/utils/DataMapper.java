@@ -10,6 +10,7 @@ import com.saurabh.E_Commerce.dto.OrdersDto.OrderResponseDto;
 import com.saurabh.E_Commerce.dto.OrdersDto.OrderTimeLineDto;
 import com.saurabh.E_Commerce.dto.ProductDtos.ProductDto;
 import com.saurabh.E_Commerce.dto.ReviewDto.ReviewsDto;
+import com.saurabh.E_Commerce.dto.Vendors.VendorsDto;
 import com.saurabh.E_Commerce.dto.inventory.TransactionDto;
 import com.saurabh.E_Commerce.models.*;
 
@@ -25,10 +26,22 @@ public class DataMapper {
                 .phone(users.getPhone())
                 .build();
     }
+
+    public static VendorsDto convertToUserDto(Vendors vendors){
+        VendorsDto dto=new VendorsDto();
+        dto.setUserId(vendors.getUsers().getUserId());
+        dto.setEmail(vendors.getBusinessEmail());
+        dto.setBusinessName(vendors.getBusinessName());
+        dto.setFirstName(vendors.getUsers().getFirstName());
+        dto.setLastName(vendors.getUsers().getLastName());
+        dto.setGstNumber(vendors.getGstNumber());
+        dto.setPhone(vendors.getUsers().getPhone());
+        return dto;
+    }
     public static ProductDto convertToProductDto(Products products){
         return ProductDto.builder()
                 .id(products.getProductId())
-                .vendorId(products.getVendors().getUserId())
+                .vendorId(products.getVendors().getUsers().getUserId())
                 .name(products.getName())
                 .description(products.getDescription())
                 .categoryName(products.getCategories().getName())

@@ -51,7 +51,7 @@ public class Products extends Auditable{
 
     @ManyToOne
     @JoinColumn(name = "vendor_id")
-    private Users vendors;
+    private Vendors vendors;
 
     @OneToMany(mappedBy = "products",fetch = FetchType.EAGER,cascade =CascadeType.ALL)
     private List<ProductImage> images;
