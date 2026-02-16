@@ -5,5 +5,6 @@ public enum ReferenceType {
     PURCHASE,
     MANUAL,
     RETURN,
-    DAMAGE
+    DAMAGE,
+    RESTOCK
 }

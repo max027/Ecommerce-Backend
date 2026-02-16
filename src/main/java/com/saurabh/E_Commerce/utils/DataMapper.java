@@ -10,6 +10,7 @@ import com.saurabh.E_Commerce.dto.OrdersDto.OrderResponseDto;
 import com.saurabh.E_Commerce.dto.OrdersDto.OrderTimeLineDto;
 import com.saurabh.E_Commerce.dto.ProductDtos.ProductDto;
 import com.saurabh.E_Commerce.dto.ReviewDto.ReviewsDto;
+import com.saurabh.E_Commerce.dto.inventory.TransactionDto;
 import com.saurabh.E_Commerce.models.*;
 
 import java.util.ArrayList;
@@ -127,6 +128,20 @@ public class DataMapper {
         dto.setOrderStatusHistoryId(history.getOrderStatusHistoryId());
         dto.setStatus(history.getStatus());
         dto.setOrdersId(history.getOrders().getOrdersId());
+        return dto;
+    }
+
+    public static TransactionDto convertToTransactionDto(InventoryTransaction inventoryTransaction){
+        TransactionDto dto=new TransactionDto();
+        dto.setInventoryTransactionId(inventoryTransaction.getInventoryTransactionId());
+        dto.setNotes(inventoryTransaction.getNotes());
+        dto.setProductId(inventoryTransaction.getProducts().getProductId());
+        dto.setQuantityChange(inventoryTransaction.getQuantityChange());
+        dto.setQuantityBefore(inventoryTransaction.getQuantityBefore());
+        dto.setQuantityAfter(inventoryTransaction.getQuantityAfter());
+        dto.setReferenceId(inventoryTransaction.getReferenceId());
+        dto.setTransactionType(inventoryTransaction.getTransactionType().toString());
+        dto.setReferenceType(inventoryTransaction.getReferenceType().toString());
         return dto;
     }
 
