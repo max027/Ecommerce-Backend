@@ -4,6 +4,7 @@ import com.saurabh.E_Commerce.dto.AuthDtos.UserDto;
 import com.saurabh.E_Commerce.dto.OrdersDto.OrderResponseDto;
 import com.saurabh.E_Commerce.dto.ProductDtos.ProductDto;
 import com.saurabh.E_Commerce.dto.ProductDtos.ProductRequestDto;
+import com.saurabh.E_Commerce.dto.Vendors.UpdateStatusDto;
 import com.saurabh.E_Commerce.dto.Vendors.UpdateVendorDto;
 import com.saurabh.E_Commerce.dto.Vendors.VendorsDto;
 import com.saurabh.E_Commerce.service.VendorService;
@@ -77,5 +78,11 @@ public class VendorController {
     @PreAuthorize("hasRole('VENDOR') or hasAuthority('VIEW_ORDERS')")
     public ResponseEntity<OrderResponseDto>viewOrders(@PathVariable long id){
         return ResponseEntity.ok(vendorService.viewOrders(id));
+    }
+    @PutMapping("/products/orders/{id}/status")
+    @PreAuthorize("hasRole('VENDOR') or hasAuthority('MANAGE_ORDERS')")
+    public ResponseEntity<?>updateStatus(@Valid @RequestBody UpdateStatusDto request,@PathVariable long id){
+        vendorService.updateStatus(id,request);
+        return ResponseEntity.ok("status updated");
     }
 }

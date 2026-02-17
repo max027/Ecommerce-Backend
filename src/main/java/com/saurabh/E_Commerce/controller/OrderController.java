@@ -28,24 +28,25 @@ public class OrderController {
     }
 
     @GetMapping("/")
-    @PreAuthorize("hasRole('CUSTOMER')")
+    @PreAuthorize("hasRole('CUSTOMER') or hasAuthority('VIEW_ORDERS')")
     public ResponseEntity<Page<OrderResponseDto>>getAllOrders(@RequestParam int page,@RequestParam int limit){
         return ResponseEntity.ok(orderService.getAllOrders(page,limit));
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('CUSTOMER')")
+    @PreAuthorize("hasRole('CUSTOMER') or hasAuthority('VIEW_ORDERS')")
     public ResponseEntity<OrderResponseDto>getOrder(@PathVariable long id){
         return ResponseEntity.ok(orderService.getOrder(id));
     }
 
 
     @PutMapping("/{id}/cancel")
-    @PreAuthorize("hasRole('CUSTOMER')")
+    @PreAuthorize("hasAnyRole('CUSTOMER') or hasAuthority('CANCEL_ORDERS')")
     public ResponseEntity<?>cancelOrder(@Valid @RequestBody CancelOrderDto request,@PathVariable long id){
         orderService.cancelOrder(request,id);
         return ResponseEntity.ok().body("order canceled");
     }
+
     @PostMapping("/{id}/review")
     @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<?>createReview(@Valid @RequestBody ReviewDto request, @PathVariable long id){
@@ -54,20 +55,20 @@ public class OrderController {
     }
 
     @GetMapping("/all")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','VENDOR','SUPPORT') or hasAuthority('VIEW_ORDERS')")
     public ResponseEntity<Page<OrderResponseDto>>getOrders(@RequestParam int page,@RequestParam int limit){
         return ResponseEntity.ok(orderService.getAllOrders(page,limit));
     }
 
     @PutMapping("/{id}/status")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','VENDOR','SUPPORT') or hasAuthority('MANAGE_ORDERS')")
     public ResponseEntity<?>updateOrderStatus(@Valid @RequestBody UpdateStatusDto request,@PathVariable long id){
         orderService.updateOrderStatus(request,id);
         return ResponseEntity.ok().body("order status updated");
     }
 
     @GetMapping("/{id}/timeline")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','VENDOR','SUPPORT') or hasAuthority('VIEW_ORDERS')")
     public ResponseEntity<List<OrderTimeLineDto>>getTileLine(@PathVariable long id){
         return ResponseEntity.ok().body(orderService.getTimelineHistory(id));
     }

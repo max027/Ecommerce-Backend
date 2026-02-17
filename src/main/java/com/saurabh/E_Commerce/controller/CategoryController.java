@@ -19,41 +19,45 @@ import java.util.List;
 public class CategoryController {
     private final CategoryService categoryService;
     @GetMapping("/")
+    @PreAuthorize("hasAuthority('VIEW_CATEGORY')")
     public ResponseEntity<List<CategoryDto>>getAllCategory(){
         return ResponseEntity.ok(categoryService.getAllCategory());
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('VIEW_CATEGORY')")
     public ResponseEntity<CategoryDto>getAllCategory(@PathVariable  long id){
         return ResponseEntity.ok(categoryService.getById(id));
     }
 
     @GetMapping("/slug/{slug}")
+    @PreAuthorize("hasAuthority('VIEW_CATEGORY')")
     public ResponseEntity<CategoryDto>getBySlug(@PathVariable  String slug){
         return ResponseEntity.ok(categoryService.getBySlug(slug));
     }
 
     @GetMapping("/{id}/products")
+    @PreAuthorize("hasAnyAuthority('VIEW_CATEGORY','VIEW_PRODUCT')")
     public ResponseEntity<List<ProductDto>>getProductOfCategory(@PathVariable long id){
         return ResponseEntity.ok(categoryService.getProductOfCategory(id));
     }
 
     @PostMapping("/")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasAuthority('CREATE_CATEGORY')")
     public ResponseEntity<?>createCategory(@Valid @RequestBody CategoryRequestDto request){
         categoryService.createCategory(request);
         return ResponseEntity.ok("Category created");
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasAuthority('UPDATE_CATEGORY')")
     public ResponseEntity<?>updateCategory(@Valid @RequestBody CategoryRequestDto request,@PathVariable long id){
         categoryService.updateCategory(request,id);
         return ResponseEntity.ok("Category updated");
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasAuthority('DELETE_CATEGORY')")
     public ResponseEntity<?>deleteCategory(@PathVariable long id){
         categoryService.deleteCategory(id);
         return ResponseEntity.noContent().build();

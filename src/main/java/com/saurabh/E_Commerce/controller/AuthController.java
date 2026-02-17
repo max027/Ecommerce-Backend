@@ -12,6 +12,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
@@ -161,6 +162,7 @@ public class AuthController {
     }
 
     @GetMapping("/me")
+    @PreAuthorize("hasAnyRole('ADMIN','CUSTOMER','VENDOR','SUPPORT')")
     public ResponseEntity<UserDto> getUserInfo(){
         return ResponseEntity.ok(service.getUserInformation());
     }

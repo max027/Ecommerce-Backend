@@ -4,6 +4,7 @@ import com.saurabh.E_Commerce.dto.AuthDtos.UserDto;
 import com.saurabh.E_Commerce.dto.OrdersDto.OrderResponseDto;
 import com.saurabh.E_Commerce.dto.ProductDtos.ProductDto;
 import com.saurabh.E_Commerce.dto.ProductDtos.ProductRequestDto;
+import com.saurabh.E_Commerce.dto.Vendors.UpdateStatusDto;
 import com.saurabh.E_Commerce.dto.Vendors.UpdateVendorDto;
 import com.saurabh.E_Commerce.dto.Vendors.VendorsDto;
 import com.saurabh.E_Commerce.exception.ApiError;
@@ -11,11 +12,13 @@ import com.saurabh.E_Commerce.models.Orders;
 import com.saurabh.E_Commerce.models.Products;
 import com.saurabh.E_Commerce.models.Users;
 import com.saurabh.E_Commerce.models.Vendors;
+import com.saurabh.E_Commerce.models.enums.StatusEnum;
 import com.saurabh.E_Commerce.repository.OrdersRepository;
 import com.saurabh.E_Commerce.repository.ProductsRepository;
 import com.saurabh.E_Commerce.repository.VendorsRepository;
 import com.saurabh.E_Commerce.security.AuthUtils;
 import com.saurabh.E_Commerce.utils.DataMapper;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -105,5 +108,23 @@ public class VendorService {
                 ()->new ApiError("No such orders",HttpStatus.NOT_FOUND.value())
         );
         return DataMapper.convertToOrderResponse(orders);
+    }
+
+    public void updateStatus(long id, @Valid UpdateStatusDto request) {
+       Vendors vendors=fetchVendors();
+        Orders orders=ordersRepository.findByVendors(vendors.getId(),id).orElseThrow(
+                ()->new ApiError("No such orders",HttpStatus.NOT_FOUND.value())
+        );
+        String status=request.getStatus().trim().toUpperCase();
+        switch (status){
+            case "PENDING"->orders.setStatus(StatusEnum.PENDING);
+            case "CONFIRMED"->orders.setStatus(StatusEnum.CONFIRMED);
+            case "PROCESSING"->orders.setStatus(StatusEnum.PROCESSING);
+            case "SHIPPED"->orders.setStatus(StatusEnum.SHIPPED);
+            case "DELIVERED"->orders.setStatus(StatusEnum.DELIVERED);
+            case "CANCELLED"->orders.setStatus(StatusEnum.CANCELLED);
+            default -> throw new IllegalArgumentException("Invalid "+status);
+        }
+        ordersRepository.save(orders);
     }
 }

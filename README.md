@@ -52,7 +52,20 @@
 | DELETE | /api/users/address/:id             |
 | PUT    | /api/users/address/:id/set-default |
 
-##  Product Routes (`/products`)
+## Vendors
+| Method | EndPoint                 |
+|--------|--------------------------|
+| GET    | /api/vendor/profile      |
+| PUT    | /api/vendor/profile      |
+| GET    | /api/v1/vendor/products  |
+| POST   | /api/v1/vendor/products  |
+| GET    | /api/vendor/products/:id |
+| PUT    | /api/vendor/products/:id | 
+| DELETE | /api/vendor/products/:id |
+| GET    | /api/vendor/orders       |
+| GET    | /api/vendor/orders/:id   |
+
+##  Product Routes 
 ### Public Routes
 
 | Method | Endpoint               | 
@@ -72,7 +85,7 @@
 | DELETE | /products/:id/images/:imageId | 
 | PUT    | /products/:id/stock           | 
 
-##  Category Routes (`/categories`)
+##  Category Routes 
 ### Public Routes
 
 | Method | Endpoint                 | 
@@ -90,7 +103,7 @@
 | PUT    | /categories/:id  |
 | DELETE |  /categories/:id |
 
-##  Cart Routes (`/cart`)
+##  Cart Routes 
 ### Protected Routes
 
 | Method | Endpoint            | 
@@ -111,7 +124,7 @@
 | POST   | /cart/guest/:sessionId/items |
 
 
-##  Coupon Routes (`/coupons`)
+##  Coupon Routes 
 ### Public Routes
 
 | Method | Endpoint         | 
@@ -128,7 +141,7 @@
 | DELETE | /coupons/:id        |
 | PUT    | /coupons/:id/toggle | 
 
-##  Order Routes (`/orders`)
+##  Order Routes 
 
 ### Protected Routes (Customer)
 
@@ -148,3 +161,28 @@
 | PUT    | /orders/:id/status   | 
 | GET    | /orders/:id/timeline | 
 
+## Reviews 
+
+| Method | Endpoint                        | 
+|--------|---------------------------------|
+| GET    | /api/reviews/product/:productId |
+
+### Protected Routes
+
+| Method | Endpoint         |
+|--------|------------------|
+| POST   | /api/reviews     | 
+| PUT    | /api/reviews/:id | 
+| DELETE | /api/reviews/:id | 
+
+## Inventory Routes
+
+### Admin Routes
+
+| Method | Endpoint                           | 
+|--------|------------------------------------|
+| GET    | /api/inventory                     | 
+| GET    | /api/inventory/product/:productId  |
+| POST   | /api/inventory/adjust              | 
+| GET    | /api/inventory/transactions        |
+| GET    | /api/inventory/low-stock           |

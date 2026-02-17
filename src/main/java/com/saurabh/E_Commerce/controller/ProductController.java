@@ -20,6 +20,7 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("/")
+    @PreAuthorize("hasAuthority('VIEW_PRODUCT')")
     public ResponseEntity<Page<ProductDto>>getAllProducts(
             @RequestParam int page,
             @RequestParam int limit,
@@ -28,7 +29,9 @@ public class ProductController {
     ){
         return ResponseEntity.ok(productService.getAllProduct(page,limit,minPrice,maxPrice));
     }
+
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('VIEW_PRODUCT')")
     public ResponseEntity<ProductDto>getProductById(@PathVariable long id){
         return ResponseEntity.ok(productService.getProductById(id));
     }
@@ -42,45 +45,46 @@ public class ProductController {
     }
 
     @GetMapping("/slug/{slug}")
+    @PreAuthorize("hasAuthority('VIEW_PRODUCT')")
     public ResponseEntity<ProductDto>getBySlug(@PathVariable String slug){
         return ResponseEntity.ok(productService.getBySlug(slug));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/")
+    @PreAuthorize("hasAnyRole('ADMIN','VENDOR') or hasAuthority('CREATE_PRODUCT')")
     public ResponseEntity<ProductDto>createProduct(@Valid @RequestBody ProductRequestDto request){
         return ResponseEntity.ok(productService.createProduct(request));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','VENDOR') or hasAuthority('UPDATE_PRODUCT')")
     public ResponseEntity<ProductDto>updateProduct(@PathVariable long id,@Valid @RequestBody ProductRequestDto request){
         return ResponseEntity.ok(productService.updateProduct(id,request));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','VENDOR') or hasAuthority('DELETE_PRODUCT')")
     public ResponseEntity<?>updateProduct(@PathVariable long id){
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/{id}/images")
+    @PreAuthorize("hasAnyRole('ADMIN','VENDOR') or hasAuthority('UPDATE_PRODUCT')")
     public ResponseEntity<?>addImage(@PathVariable long id,@Valid @RequestBody ImageDto image){
         productService.addImage(id,image);
         return ResponseEntity.ok("image added");
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}/images/{imageId}")
+    @PreAuthorize("hasAnyRole('ADMIN','VENDOR') or hasAuthority('UPDATE_PRODUCT')")
     public ResponseEntity<?>deleteImage(@PathVariable long id,@PathVariable long imageId){
         productService.removeImage(id,imageId);
         return ResponseEntity.ok("image removed");
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/{id}/stock/")
+    @PreAuthorize("hasAnyRole('ADMIN','VENDOR') or hasAuthority('UPDATE_PRODUCT')")
     public ResponseEntity<?>updateStock(@PathVariable long id, @Valid  @RequestBody StockDto stockDto){
         productService.updateStock(id,stockDto);
         return ResponseEntity.ok("image removed");
