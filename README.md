@@ -1,188 +1,177 @@
-# Ecommerce Backend
+# 🛒 E-Commerce Backend
 
-# Routes
-## Auth
-| method | EndPoint                  |
-|--------|---------------------------|
-| POST   | /api/auth/register        |
-| POST   | /api/auth/login           |
-| POST   | /api/auth/refresh         |
-| POST   | /api/auth/logout          |
-| POST   | /api/auth/forget-password |
-| POST   | /api/auth/reset-password  |
-| POST   | /api/auth/verify-email    |
-| GET    | /api/auth/me              |
+A robust and scalable e-commerce backend built with **Java + Spring Boot** and **MySQL**, featuring secure authentication using **JWT/OAuth**.
 
-## Admin
+---
 
-| method | EndPoint                             |
-|--------|--------------------------------------|
-| GET    | /api/admin/vendors?page=0&pageSize=5 |
-| GET    | /api/admin/                          |
-| POST   | /api/admin/invite                    |
-| POST   | /api/admin/vendors/invite            |
-| POST   | /api/admin/accept-invite             |
-| PUT    | /api/admin/:id                       |
-| PUT    | /api/admin/vendors/"id               |
-| DELETE | /api/admin/:id                       |
-| PUT    | /api/vendors/:id/suspend             |
-| GET    | /api/admin/users?page=0&pageSize=5   |
-| GET    | /api/admin/users/:id                 |
-| DELETE | /api/admin/users/:id                 |
-| PUT    | /api/admin/users/:id/suspend         |
-| PUT    | /api/admin/users/:id/roles           |
+## 🚀 Tech Stack
 
-## Roles Management
-| method | EndPoint                 |
-|--------|--------------------------|
-| POST   | /api/admin/roles         |
-| PUT    | /api/admin/roles/:id     |
-| DELETE | /api/admin/roles/:id     |
-| GET    | /api/admin/roles/:id     |
+| Layer        | Technology          |
+|--------------|---------------------|
+| Language     | Java 17+            |
+| Framework    | Spring Boot 3.x     |
+| Database     | MySQL               |
+| Auth         | JWT / OAuth 2.0     |
+| Build Tool   | Maven / Gradle      |
+| API Style    | REST                |
 
-## Users
-| method | EndPoint                           |
-|--------|------------------------------------|
-| GET    | /api/users/profile                 |
-| PUT    | /api/users/profile/                |
-| POST   | /api/users/address                 |
-| PUT    | /api/users/address                 |
-| GET    | /api/users/address/:id             |
-| PUT    | /api/users/address/:id             |
-| DELETE | /api/users/address/:id             |
-| PUT    | /api/users/address/:id/set-default |
+---
 
-## Vendors
-| Method | EndPoint                 |
-|--------|--------------------------|
-| GET    | /api/vendor/profile      |
-| PUT    | /api/vendor/profile      |
-| GET    | /api/v1/vendor/products  |
-| POST   | /api/v1/vendor/products  |
-| GET    | /api/vendor/products/:id |
-| PUT    | /api/vendor/products/:id | 
-| DELETE | /api/vendor/products/:id |
-| GET    | /api/vendor/orders       |
-| GET    | /api/vendor/orders/:id   |
+## 📁 Project Structure
 
-##  Product Routes 
-### Public Routes
+```
+ecommerce-backend/
+├── src/
+│   ├── main/
+│   │   ├── java/com/ecommerce/
+│   │   │   ├── config/          # Security & app configuration
+│   │   │   ├── controller/      # REST API controllers
+│   │   │   ├── dto/             # Data Transfer Objects
+│   │   │   ├── entity/          # JPA entities
+│   │   │   ├── exception/       # Custom exception handling
+│   │   │   ├── repository/      # JPA repositories
+│   │   │   ├── security/        # JWT filters & auth logic
+│   │   │   └── service/         # Business logic
+│   │   └── resources/
+│   │       ├── application.properties
+│   │       └── application-dev.properties
+│   └── test/
+├── pom.xml
+└── README.md
+```
 
-| Method | Endpoint               | 
-|--------|------------------------|
-| GET    | /api/products          |
-| GET    | /products/:id          | 
-| GET    | /products/slug/:slug   | 
-| GET    | /products/:id/reviews  |
+---
 
-### Admin Routes
-| methos | endpoint                      |
-|--------|-------------------------------|
-| POST   | /products                     | 
-| PUT    | /products/:id                 | 
-| DELETE | /products/:id                 | 
-| POST   | /products/:id/images          | 
-| DELETE | /products/:id/images/:imageId | 
-| PUT    | /products/:id/stock           | 
+## ⚙️ Prerequisites
 
-##  Category Routes 
-### Public Routes
+- Java 17 or higher
+- MySQL 8.0+
+- Maven 3.8+ or Gradle 7+
+- An IDE like IntelliJ IDEA or VS Code
 
-| Method | Endpoint                 | 
-|--------|--------------------------|
-| GET    | /categories              |
-| GET    | /categories/:id          |
-| GET    | /categories/slug/:slug   |
-| GET    | /categories/:id/products | 
+---
 
-### Admin Routes
+## 🛠️ Setup & Installation
 
-| Method | Endpoint         | 
-|--------|------------------|
-| POST   | /categories      |
-| PUT    | /categories/:id  |
-| DELETE |  /categories/:id |
+### 1. Clone the repository
 
-##  Cart Routes 
-### Protected Routes
+```bash
+git clone https://github.com/max027/Ecommerce-Backend.git
+cd ecommerce-backend
+```
 
-| Method | Endpoint            | 
-|--------|---------------------|
-| GET    | /cart               | 
-| POST   | /cart/items         |
-| PUT    | /cart/items/:itemId |
-| DELETE | /cart/items/:itemId | 
-| DELETE | /cart               | 
-| GET    | /cart/count         | 
+### 2. Configure the database
 
-### Public Routes (Guest Cart)
+Create a MySQL database:
 
-| Method | Endpoint                     | 
-|--------|------------------------------|
-| POST   | /cart/guest                  |
-| GET    | /cart/guest/:sessionId       |
-| POST   | /cart/guest/:sessionId/items |
+```sql
+CREATE DATABASE ecommerce_db;
+```
+
+### 3. Update `application.properties`
 
 
-##  Coupon Routes 
-### Public Routes
 
-| Method | Endpoint         | 
-|--------|------------------|
-| POST   | coupons/validate |
+### 4. Build and run
 
-### Admin Routes
-| Method | Endpoint            | 
-|--------|---------------------|
-| GET    | /coupons            |
-| GET    | /coupons/:id        |
-| POST   | /coupons            | 
-| PUT    | /coupons/:id        |
-| DELETE | /coupons/:id        |
-| PUT    | /coupons/:id/toggle | 
+```bash
+# Using Maven
+mvn clean install
+mvn spring-boot:run
 
-##  Order Routes 
+# Using Gradle
+gradle build
+gradle bootRun
+```
 
-### Protected Routes (Customer)
+The server will start at `http://localhost:8080`.
 
-| Method | Endpoint            | 
-|--------|---------------------|
-| POST   | /orders             |
-| GET    | /orders             | 
-| GET    | /orders/:id         | 
-| PUT    | / orders/:id/cancel | 
-| POST   | /orders/:id/review  | 
+---
 
-### Admin Routes
+## 🔐 Authentication
 
-| Method | Endpoint             | 
-|--------|----------------------|
-| GET    | /orders/all          | 
-| PUT    | /orders/:id/status   | 
-| GET    | /orders/:id/timeline | 
+This project uses **JWT (JSON Web Tokens)** for stateless authentication.
 
-## Reviews 
+### Auth Endpoints
 
-| Method | Endpoint                        | 
-|--------|---------------------------------|
-| GET    | /api/reviews/product/:productId |
+| Method | Endpoint              | Description         | Access  |
+|--------|-----------------------|---------------------|---------|
+| POST   | `/api/auth/register`  | Register a new user | Public  |
+| POST   | `/api/auth/login`     | Login & get token   | Public  |
+| POST   | `/api/auth/refresh`   | Refresh JWT token   | Private |
+| POST   | `/api/auth/logout`    | Logout user         | Private |
 
-### Protected Routes
+### How it works
 
-| Method | Endpoint         |
-|--------|------------------|
-| POST   | /api/reviews     | 
-| PUT    | /api/reviews/:id | 
-| DELETE | /api/reviews/:id | 
+1. User registers or logs in → receives a **JWT access token**
+2. Token is sent in the `Authorization` header on subsequent requests:
+   ```
+   Authorization: Bearer <your_token>
+   ```
+3. Spring Security validates the token on every protected route
 
-## Inventory Routes
+---
 
-### Admin Routes
+## 📬 API Overview
 
-| Method | Endpoint                           | 
-|--------|------------------------------------|
-| GET    | /api/inventory                     | 
-| GET    | /api/inventory/product/:productId  |
-| POST   | /api/inventory/adjust              | 
-| GET    | /api/inventory/transactions        |
-| GET    | /api/inventory/low-stock           |
+All endpoints are prefixed with `/api`.
+
+> Protected routes require a valid `Authorization: Bearer <token>` header.
+
+---
+
+## 🌍 Environment Variables
+
+| Variable              | Description                        |
+|-----------------------|------------------------------------|
+| `DB_URL`              | MySQL connection URL                |
+| `DB_USERNAME`         | MySQL username                     |
+| `DB_PASSWORD`         | MySQL password                     |
+| `JWT_SECRET`          | Secret key for signing JWT tokens  |
+| `JWT_EXPIRATION`      | Token expiry time in milliseconds  |
+
+---
+
+## 🧪 Running Tests
+
+```bash
+# Maven
+mvn test
+
+# Gradle
+gradle test
+```
+
+---
+
+## 📦 Building for Production
+
+```bash
+# Maven
+mvn clean package -DskipTests
+java -jar target/ecommerce-backend-0.0.1-SNAPSHOT.jar
+
+# Gradle
+gradle bootJar
+java -jar build/libs/ecommerce-backend-0.0.1-SNAPSHOT.jar
+```
+
+---
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/your-feature`)
+3. Commit your changes (`git commit -m 'Add some feature'`)
+4. Push to the branch (`git push origin feature/your-feature`)
+5. Open a Pull Request
+
+---
+
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+> Built with ❤️ using Spring Boot
